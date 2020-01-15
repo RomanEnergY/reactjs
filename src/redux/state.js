@@ -1,9 +1,12 @@
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
+const ADD_MESSAGE = 'ADD-MESSAGE';
+const UPDATE_NEW_MESSAGES_BODY_TEXT = 'UPDATE-NEW-MESSAGES-BODY-TEXT';
 
 export const addPostAction = () => ({type: ADD_POST});
-export const updateNewPostTextAction = (text) => (
-    {type: UPDATE_NEW_POST_TEXT, newText: text});
+export const updateNewPostTextAction = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
+export const addMessageAction = () => ({type: ADD_MESSAGE});
+export const updateNewMessagesBodyTextAction = (text) => ({type: UPDATE_NEW_MESSAGES_BODY_TEXT, newText: text});
 
 let store = {
     _state: {
@@ -31,7 +34,9 @@ let store = {
                 {id: 3, message: 'Yo'},
                 {id: 4, message: 'Yo'},
                 {id: 5, message: 'Yo'}
-            ]
+            ],
+            newMessagesBody: '',
+
         },
         sidebar: {}
     },
@@ -45,11 +50,9 @@ let store = {
         this._callSubscribe = observer;  // observer
     },
     dispatch(action) {
-        // debugger;
         if (action.type === ADD_POST) {
-            // debugger;
             let newPost = {
-                id: 5,
+                id: this._state.profilePage.posts.length,
                 message: this._state.profilePage.newPostText,
                 likesCount: 0
             };
@@ -61,6 +64,19 @@ let store = {
             this._state.profilePage.newPostText = action.newText;
             this._callSubscribe(this._state);
 
+        } else if (action.type === ADD_MESSAGE) {
+            let newMessage = {
+                id: this._state.dialogsPage.messages.length,
+                message: this._state.dialogsPage.newMessagesBody
+            };
+            this._state.dialogsPage.messages.push(newMessage);
+            this._state.dialogsPage.newMessagesBody = '';
+            this._callSubscribe(this._state);
+
+        } else if (action.type === UPDATE_NEW_MESSAGES_BODY_TEXT) {
+            this._state.dialogsPage.newMessagesBody = action.newText;
+            this._callSubscribe(this._state);
+
         }
     }
 };
@@ -68,8 +84,6 @@ let store = {
 export default store;
 window.state = store;
 
-/* 39 - action creator, action type
-определены методы addPostAction и updateNewPostTextAction для непосредственного импорта их в компоненте MyPost
-для минимизации ошибки передачи данных, а так же переменные ADD_POST и UPDATE_NEW_POST_TEXT для ссылки на действие
-которое требуется выполнить
+/*
+ * 40 - практика - ADD_MESSAGE and UPDATE_NEW_MESSAGES_BODY_TEXT
  */

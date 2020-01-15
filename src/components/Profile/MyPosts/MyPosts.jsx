@@ -4,21 +4,13 @@ import Post from './Post/Post';
 import {addPostAction, updateNewPostTextAction} from "../../../redux/state";
 
 const MyPosts = (props) => {
-    let postsElements =
-        props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>);
-
+    let postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>);
     let newPostElement = React.createRef();
-
     let addPost = () => {
-        // props.addPost();
         props.dispatch(addPostAction());
     };
-
     let onPostChange = () => {
-        // debugger;
-        let text = newPostElement.current.value;
-        // props.updateNewPostText(text);
-        props.dispatch(updateNewPostTextAction(text));
+        props.dispatch(updateNewPostTextAction(newPostElement.current.value));
     };
 
     return (
@@ -26,7 +18,7 @@ const MyPosts = (props) => {
             <h3>My posts</h3>
             <div>
                 <div>
-                    <textarea onChange={onPostChange} ref={newPostElement}
+                    <textarea placeholder='Enter your post' onChange={onPostChange} ref={newPostElement}
                               value={props.newPostText}/>
                 </div>
                 <div>
@@ -38,6 +30,6 @@ const MyPosts = (props) => {
             </div>
         </div>
     )
-}
+};
 
 export default MyPosts;
