@@ -1,3 +1,10 @@
+const ADD_POST = 'ADD-POST';
+const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
+
+export const addPostAction = () => ({type: ADD_POST});
+export const updateNewPostTextAction = (text) => (
+    {type: UPDATE_NEW_POST_TEXT, newText: text});
+
 let store = {
     _state: {
         profilePage: {
@@ -34,25 +41,13 @@ let store = {
     getState() {
         return this._state;
     },
-    _addPost() {
-        let newPost = {
-            id: 5,
-            message: this._state.profilePage.newPostText,
-            likesCount: 0
-        };
-        this._state.profilePage.posts.push(newPost);
-        this._state.profilePage.newPostText = '';
-        this._callSubscribe(this._state);
-    },
-    _updateNewPostText(newText) {
-        this._state.profilePage.newPostText = newText;
-        this._callSubscribe(this._state);
-    },
     subscribe(observer) {
         this._callSubscribe = observer;  // observer
     },
     dispatch(action) {
-        if (action.type === 'ADD-POST') {
+        // debugger;
+        if (action.type === ADD_POST) {
+            // debugger;
             let newPost = {
                 id: 5,
                 message: this._state.profilePage.newPostText,
@@ -62,7 +57,7 @@ let store = {
             this._state.profilePage.newPostText = '';
             this._callSubscribe(this._state);
 
-        } else if (action.type === 'UPDATE-NEW-POST-TEXT') {
+        } else if (action.type === UPDATE_NEW_POST_TEXT) {
             this._state.profilePage.newPostText = action.newText;
             this._callSubscribe(this._state);
 
@@ -73,7 +68,8 @@ let store = {
 export default store;
 window.state = store;
 
-/* 38 - dispatch и action
-метод callback из store передается единственный с именем dispatch и одним параметром action
-при этом параметр action принимает разный объект и типом вызова метода из store
+/* 39 - action creator, action type
+определены методы addPostAction и updateNewPostTextAction для непосредственного импорта их в компоненте MyPost
+для минимизации ошибки передачи данных, а так же переменные ADD_POST и UPDATE_NEW_POST_TEXT для ссылки на действие
+которое требуется выполнить
  */
