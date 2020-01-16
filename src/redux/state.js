@@ -1,12 +1,6 @@
-const ADD_POST = 'ADD-POST';
-const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
-const ADD_MESSAGE = 'ADD-MESSAGE';
-const UPDATE_NEW_MESSAGES_BODY_TEXT = 'UPDATE-NEW-MESSAGES-BODY-TEXT';
-
-export const addPostAction = () => ({type: ADD_POST});
-export const updateNewPostTextAction = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
-export const addMessageAction = () => ({type: ADD_MESSAGE});
-export const updateNewMessagesBodyTextAction = (text) => ({type: UPDATE_NEW_MESSAGES_BODY_TEXT, newText: text});
+import {dialogReducer} from "./dialogReducer";
+import {profileReducer} from "./profileReducer";
+import {sidebarReducer} from "./sidebarReducer";
 
 let store = {
     _state: {
@@ -50,34 +44,11 @@ let store = {
         this._callSubscribe = observer;  // observer
     },
     dispatch(action) {
-        if (action.type === ADD_POST) {
-            let newPost = {
-                id: this._state.profilePage.posts.length,
-                message: this._state.profilePage.newPostText,
-                likesCount: 0
-            };
-            this._state.profilePage.posts.push(newPost);
-            this._state.profilePage.newPostText = '';
-            this._callSubscribe(this._state);
+        dialogReducer(this._state.dialogsPage, action);
+        profileReducer(this._state.profilePage, action);
+        sidebarReducer(this._state.sidebar, action);
 
-        } else if (action.type === UPDATE_NEW_POST_TEXT) {
-            this._state.profilePage.newPostText = action.newText;
-            this._callSubscribe(this._state);
-
-        } else if (action.type === ADD_MESSAGE) {
-            let newMessage = {
-                id: this._state.dialogsPage.messages.length,
-                message: this._state.dialogsPage.newMessagesBody
-            };
-            this._state.dialogsPage.messages.push(newMessage);
-            this._state.dialogsPage.newMessagesBody = '';
-            this._callSubscribe(this._state);
-
-        } else if (action.type === UPDATE_NEW_MESSAGES_BODY_TEXT) {
-            this._state.dialogsPage.newMessagesBody = action.newText;
-            this._callSubscribe(this._state);
-
-        }
+        this._callSubscribe(this._state);
     }
 };
 
@@ -85,5 +56,7 @@ export default store;
 window.state = store;
 
 /*
- * 40 - практика - ADD_MESSAGE and UPDATE_NEW_MESSAGES_BODY_TEXT
+ * 41 - reducer
+ * в метод reducer передается state данных и событие для уменьшения разростания тела
+ * метода dispatch(action)
  */
