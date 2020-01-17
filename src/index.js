@@ -1,10 +1,9 @@
 import * as serviceWorker from './serviceWorker';
-import state, {subscribe} from "./redux/state";
+import store from "./redux/reduxStore";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import store from './redux/state';
 import {BrowserRouter} from "react-router-dom";
 
 let rerenderEntireTree = (prop) => {
@@ -16,5 +15,6 @@ let rerenderEntireTree = (prop) => {
 
 rerenderEntireTree(store.getState());
 
-state.subscribe(rerenderEntireTree);
+store.subscribe(() => rerenderEntireTree(store.getState()));
+
 serviceWorker.unregister();

@@ -54,9 +54,3 @@ let store = {
 
 export default store;
 window.state = store;
-
-/*
- * 41 - reducer
- * в метод reducer передается state данных и событие для уменьшения разростания тела
- * метода dispatch(action)
- */

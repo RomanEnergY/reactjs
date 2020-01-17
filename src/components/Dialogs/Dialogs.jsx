@@ -5,8 +5,10 @@ import Message from "./Message/Message";
 import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/dialogReducer";
 
 const Dialogs = (props) => {
-    const dialogsElements = props.state.dialogs.map(d => <DialogItem name={d.name} id={d.id}/>);
-    const messagesElements = props.state.messages.map(m => <Message message={m.message}/>);
+    debugger
+
+    const dialogsElements = props.dialogPage.dialogs.map(d => <DialogItem name={d.name} id={d.id}/>);
+    const messagesElements = props.dialogPage.messages.map(m => <Message message={m.message}/>);
     const newPostElement = React.createRef();
 
     const addMessage = () => props.dispatch(addMessageAction());
@@ -21,7 +23,7 @@ const Dialogs = (props) => {
                 <div>{messagesElements}</div>
                 <div>
                     <div><textarea placeholder='Enter your message' onChange={onMessageChange} ref={newPostElement}
-                                   value={props.state.newMessagesBody}/>
+                                   value={props.dialogPage.newMessagesBody}/>
                     </div>
                     <div>
                         <button onClick={addMessage}>Add post</button>
