@@ -11,26 +11,30 @@ const initialState = {
         {id: 3, message: 'Blabla', likesCount: 11},
         {id: 4, message: 'Dada', likesCount: 11}
     ],
-    newPostText: 'it-kamasutra.com'
+    newPostText: ''
 };
 
 export const profileReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case ADD_POST:
-            let newPost = {
-                id: state.posts.length,
-                message: state.newPostText,
-                likesCount: 0
-            };
-            state.posts.push(newPost);
-            state.newPostText = '';
-            return state;
+        switch (action.type) {
+            case ADD_POST:
+                if (state.newPostText.length > 0) {
+                    let newPost = {
+                        id: state.posts.length,
+                        message: state.newPostText,
+                        likesCount: 0
+                    };
+                    state.posts.push(newPost);
+                    state.newPostText = '';
+                }
+                return state;
 
-        case UPDATE_NEW_POST_TEXT:
-            state.newPostText = action.newText;
-            return state;
+            case
+            UPDATE_NEW_POST_TEXT:
+                state.newPostText = action.newText;
+                return state;
 
-        default:
-            return state;
+            default:
+                return state;
+        }
     }
-};
+;

@@ -13,7 +13,7 @@ let store = {
             ],
             newPostText: 'it-kamasutra.com'
         },
-        dialogsPage: {
+        dialogPage: {
             dialogs: [
                 {id: 1, name: 'Dimych'},
                 {id: 2, name: 'Andrew'},

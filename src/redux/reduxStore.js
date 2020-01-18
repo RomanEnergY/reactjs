@@ -8,8 +8,8 @@ import {sidebarReducer} from "./sidebarReducer";
 при вызове dispatch(action), вывывеются по порядку перечисленные методы с параметром - action
  */
 let reducers = combineReducers({
-    dialogPage: dialogReducer,
     profilePage: profileReducer,
+    dialogPage: dialogReducer,
     sidebarPage: sidebarReducer
 });
 
