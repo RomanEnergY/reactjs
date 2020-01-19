@@ -1,20 +1,26 @@
 import React from 'react';
 import Dialogs from "./Dialogs";
 import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/dialogReducer";
-import StoreContext from "../../StoreContext";
+import {connect} from "react-redux";
 
-const DialogsContainer = () => {
-    return <StoreContext.Consumer>
-        {store => {
-            return <Dialogs
-                dialogs={store.getState().dialogPage.dialogs}
-                messages={store.getState().dialogPage.messages}
-                newMessagesBody={store.getState().dialogPage.newMessagesBody}
-                onClickButton={() => store.dispatch(addMessageAction())}
-                onChange={(text) => store.dispatch(updateNewMessagesBodyTextAction(text))}
-            />
-        }}
-    </StoreContext.Consumer>
+// Передача данных
+const mapStateToProps = (state) => {
+    return {
+        dialogs: state.dialogPage.dialogs,
+        messages: state.dialogPage.messages,
+        newMessagesBody: state.dialogPage.newMessagesBody
+    }
 };
+
+// Передача методов
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onClickButton: () => dispatch(addMessageAction()),
+        onChange: (text) => dispatch(updateNewMessagesBodyTextAction(text))
+    }
+};
+
+// Создание и настройка коннект данных, методов и компаненты
+const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(Dialogs);
 
 export default DialogsContainer;
