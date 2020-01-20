@@ -22,7 +22,7 @@ const MyPosts = (props) => {
                 </div>
             </div>
             <div className={s.posts}>
-                {postsElements}
+                {postsElements.reverse()}
             </div>
         </div>
     )

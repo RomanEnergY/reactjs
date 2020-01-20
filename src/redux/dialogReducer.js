@@ -31,14 +31,19 @@ export const dialogReducer = (state = initialState, action) => {
                     id: state.messages.length,
                     message: state.newMessagesBody
                 };
-                state.messages.push(newMessage);
-                state.newMessagesBody = '';
+                let copyState = {...state};
+                copyState.messages = [...state.messages];
+                copyState.messages.push(newMessage);
+                copyState.newMessagesBody = '';
+
+                return copyState;
             }
             return state;
 
         case UPDATE_NEW_MESSAGES_BODY_TEXT:
-            state.newMessagesBody = action.newText;
-            return state;
+            let copyState = {...state};
+            copyState.newMessagesBody = action.newText;
+            return copyState;
 
         default:
             return state;
