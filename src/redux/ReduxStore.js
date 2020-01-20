@@ -1,7 +1,8 @@
 import {combineReducers, createStore} from "redux";
-import {dialogReducer} from "./dialogReducer";
-import {profileReducer} from "./profileReducer";
-import {sidebarReducer} from "./sidebarReducer";
+import {dialogReducer} from "./DialogReducer";
+import {profileReducer} from "./ProfileReducer";
+import {sidebarReducer} from "./SidebarReducer";
+import {usersReducer} from "./UsersReducer";
 
 /* reducers - список объектов которое хранит состояния/поведения
 передача компоненту данных через пропсы осуществляется по ключу
@@ -10,7 +11,8 @@ import {sidebarReducer} from "./sidebarReducer";
 let reducers = combineReducers({
     profilePage: profileReducer,
     dialogPage: dialogReducer,
-    sidebarPage: sidebarReducer
+    sidebarPage: sidebarReducer,
+    usersPage: usersReducer
 });
 
 // store - реализация библиотеки "redux"

@@ -1,6 +1,6 @@
 import React from 'react';
 import Dialogs from "./Dialogs";
-import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/dialogReducer";
+import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/DialogReducer";
 import {connect} from "react-redux";
 
 // Передача данных

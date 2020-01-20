@@ -1,6 +1,6 @@
 import React from 'react';
 import MyPosts from "./MyPosts";
-import {addPostAction, updateNewPostTextAction} from "../../../redux/profileReducer";
+import {addPostAction, updateNewPostTextAction} from "../../../redux/ProfileReducer";
 import {connect} from "react-redux";
 
 // Передача данных
