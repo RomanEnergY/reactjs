@@ -1,29 +1,29 @@
 const initialState = {
     users: [
-        {
-            id: '1',
-            img: 'https://www.pinclipart.com/picdir/middle/187-1870879_meet-the-board-user-stock-clipart.png',
-            followed: true,
-            fullName: 'Roman',
-            status: 'Status 1',
-            location: {city: 'Saint-Petersburg', country: 'Russia'}
-        },
-        {
-            id: '2',
-            img: 'https://www.pinclipart.com/picdir/middle/187-1870879_meet-the-board-user-stock-clipart.png',
-            followed: false,
-            fullName: 'Jenya',
-            status: 'Status 2',
-            location: {city: 'Moscow', country: 'Russia'}
-        },
-        {
-            id: '3',
-            img: 'https://img1.freepng.ru/20180702/itr/kisspng-senior-management-computer-icons-clip-art-women-cl-5b39d03b5b6775.5347276915305155153744.jpg',
-            followed: false,
-            fullName: 'Andrey',
-            status: 'Status 3',
-            location: {city: 'Belarus', country: 'Minsk'}
-        }
+        // {
+        //     id: '1',
+        //     img: 'https://www.pinclipart.com/picdir/middle/187-1870879_meet-the-board-user-stock-clipart.png',
+        //     followed: true,
+        //     fullName: 'Roman',
+        //     status: 'Status 1',
+        //     location: {city: 'Saint-Petersburg', country: 'Russia'}
+        // },
+        // {
+        //     id: '2',
+        //     img: 'https://www.pinclipart.com/picdir/middle/187-1870879_meet-the-board-user-stock-clipart.png',
+        //     followed: false,
+        //     fullName: 'Jenya',
+        //     status: 'Status 2',
+        //     location: {city: 'Moscow', country: 'Russia'}
+        // },
+        // {
+        //     id: '3',
+        //     img: 'https://img1.freepng.ru/20180702/itr/kisspng-senior-management-computer-icons-clip-art-women-cl-5b39d03b5b6775.5347276915305155153744.jpg',
+        //     followed: false,
+        //     fullName: 'Andrey',
+        //     status: 'Status 3',
+        //     location: {city: 'Belarus', country: 'Minsk'}
+        // }
     ]
 };
 
