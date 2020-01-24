@@ -3,21 +3,21 @@ import s from './Users.module.css';
 import * as axios from 'axios';
 import user_png_loc from './../../../assets/images/user1.png'
 
+class Users extends React.Component {
 
-const Users = (props) => {
+    render() {
         // Костыль от зацикливания, т.к. при вызове тега Users постоянно добавляются данные в props.users, скажим что их не больше 20
         const but = () => {
             axios.get("https://social-network.samuraijs.com/api/1.0/users")
                 .then(response => {
-                    debugger
-                    props.setUsers(response.data.items);
+                    this.props.setUsers(response.data.items);
                 });
         };
 
-        const users = props.users.map(u => {
+        const users = this.props.users.map(u => {
             const followBut = u.followed
-                ? <button onClick={() => props.unFollow(u.id)}>UnFollowed</button> // отписаться
-                : <button onClick={() => props.follow(u.id)}>Followed</button>; // подписаться
+                ? <button onClick={() => this.props.unFollow(u.id)}>UnFollowed</button> // отписаться
+                : <button onClick={() => this.props.follow(u.id)}>Followed</button>; // подписаться
 
             const photosUser = u.photos.small === null ? user_png_loc : u.photos.small;
 
@@ -59,6 +59,6 @@ const Users = (props) => {
             </div>
         )
     }
-;
+}
 
 export default Users;
