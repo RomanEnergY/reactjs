@@ -5,15 +5,28 @@ import user_png_loc from './../../../assets/images/user1.png'
 
 class Users extends React.Component {
 
-    render() {
-        // Костыль от зацикливания, т.к. при вызове тега Users постоянно добавляются данные в props.users, скажим что их не больше 20
-        const but = () => {
-            axios.get("https://social-network.samuraijs.com/api/1.0/users")
-                .then(response => {
-                    this.props.setUsers(response.data.items);
-                });
-        };
+    // по умлчанию
+    // constructor(props) {
+    //     super(props);
+    // }
 
+    /**
+     * Метод вызывается при первой отрисовки (вмонтировании) html-разметки на станицу
+     * вмонтирование осуществляется только после создания нового объекта, далее осущетвляется обновление компоненты
+     */
+    componentDidMount() {
+        alert("componentDidMount");
+        axios.get("https://social-network.samuraijs.com/api/1.0/users")
+            .then(response => {
+                this.props.setUsers(response.data.items);
+            });
+    }
+
+    componentWillUnmount() {
+        alert("componentWillUnmount");
+    }
+
+    render() {
         const users = this.props.users.map(u => {
             const followBut = u.followed
                 ? <button onClick={() => this.props.unFollow(u.id)}>UnFollowed</button> // отписаться
@@ -51,7 +64,6 @@ class Users extends React.Component {
         return (
             <div className={s.dialogs}>
                 <div className={s.messages}>
-                    <button onClick={but}>ClickMe</button>
                     <div>
                         {users}
                     </div>
