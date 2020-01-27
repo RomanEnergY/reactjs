@@ -1,6 +1,7 @@
 import React from 'react';
 import s from './Users.module.css';
 import user_png_loc from "../../../assets/images/user1.png";
+import {NavLink} from "react-router-dom";
 
 const Users = (props) => {
     const pagesCount = Math.ceil(props.totalUserCount / props.pageSize); // Делим всх пользователей на станицы и округляем их в большую сторону
@@ -17,9 +18,12 @@ const Users = (props) => {
 
         return (
             <div key={u.id}>
+
                 <span>
                     <div>
-                        <img className={s.userPhoto} src={photosUser} alt={photosUser}/>
+                        <NavLink to={`/profile/${u.id}`}>
+                            <img className={s.userPhoto} src={photosUser} alt={photosUser}/>
+                        </NavLink>
                     </div>
                     <div>
                         {followBut}
@@ -38,6 +42,7 @@ const Users = (props) => {
                         <div>{`{u.location.city}`}</div>
                     </span>
                 </span>
+
             </div>
         )
     });

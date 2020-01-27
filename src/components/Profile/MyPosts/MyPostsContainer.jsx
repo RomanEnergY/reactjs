@@ -1,6 +1,6 @@
 import React from 'react';
 import MyPosts from "./MyPosts";
-import {addPostAction, updateNewPostTextAction} from "../../../redux/ProfileReducer";
+import {addPost, updateNewPostText} from "../../../redux/ProfileReducer";
 import {connect} from "react-redux";
 
 // Передача данных
@@ -14,8 +14,8 @@ const mapStateToProps = (state) => {
 // Передача методов
 const mapDispatchToProps = (dispatch) => {
     return {
-        onClickButtonNewPost: () => dispatch(addPostAction()),
-        onChangeNewPost: (text) => dispatch(updateNewPostTextAction(text))
+        onClickButtonNewPost: () => dispatch(addPost()),
+        onChangeNewPost: (text) => dispatch(updateNewPostText(text))
     }
 };
 
