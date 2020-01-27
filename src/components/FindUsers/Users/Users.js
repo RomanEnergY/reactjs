@@ -19,7 +19,7 @@ const Users = (props) => {
             <div key={u.id}>
                 <span>
                     <div>
-                        <img className={s.userPhoto} src={photosUser}/>
+                        <img className={s.userPhoto} src={photosUser} alt={photosUser}/>
                     </div>
                     <div>
                         {followBut}

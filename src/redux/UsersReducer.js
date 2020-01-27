@@ -2,7 +2,8 @@ const initialState = {
     users: [],
     pageSize: 5,
     currentPage: 1,
-    totalUserCount: 0
+    totalUserCount: 0,
+    isFetching: false, // флаг получения данных
 };
 
 export const usersReducer = (state = initialState, action) => {
@@ -46,6 +47,11 @@ export const usersReducer = (state = initialState, action) => {
                 ...state,
                 totalUserCount: action.totalUserCount
             };
+        case SET_FETCHING:
+            return {
+                ...state,
+                isFetching: action.fetching
+            };
         default:
             return state;
     }
@@ -56,9 +62,11 @@ const FOLLOW = 'FOLLOW';
 const UN_FOLLOW = 'UN_FOLLOW';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_TOTAL_USER_COUNT = 'SET_TOTAL_USER_COUNT';
+const SET_FETCHING = 'SET_FETCHING';
 
 export const followAC = (userId) => ({type: FOLLOW, userId});
 export const unFollowAC = (userId) => ({type: UN_FOLLOW, userId});
 export const setUsersAC = (users) => ({type: SET_USERS, users});
 export const setCurrentPageAC = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage});
 export const setTotalUserCountAC = (totalUserCount) => ({type: SET_TOTAL_USER_COUNT, totalUserCount});
+export const setFetchingAC = (fetching) => ({type: SET_FETCHING, fetching});
