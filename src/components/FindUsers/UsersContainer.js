@@ -1,10 +1,9 @@
 import React from 'react';
 import {connect} from "react-redux";
-import * as mapDispatch from "../../redux/UsersReducer";
 import * as axios from "axios";
 import Users from "./Users/Users";
-import preloader from "./../../assets/images/preloader.svg"
 import Preloader from "../common/preloader/Preloader";
+import {follow, setCurrentPage, setFetching, setTotalUserCount, setUsers, unFollow} from "../../redux/UsersReducer";
 
 /*
     По средством connect передаем в UsersContainer данные,
@@ -56,7 +55,6 @@ class UsersContainer extends React.Component {
     }
 }
 
-// Передача данных в компоненту
 const mapStateToProps = (state) => {
     return {
         users: state.usersPage.users,
@@ -66,17 +64,13 @@ const mapStateToProps = (state) => {
         isFetching: state.usersPage.isFetching
     }
 };
-// Передача методов в компоненту
-const mapDispatchToProps = (dispatch) => {
-    return {
-        follow: (userId) => dispatch(mapDispatch.followAC(userId)),
-        unFollow: (userId) => dispatch(mapDispatch.unFollowAC(userId)),
-        setUsers: (users) => dispatch(mapDispatch.setUsersAC(users)),
-        setCurrentPage: (currentPage) => dispatch(mapDispatch.setCurrentPageAC(currentPage)),
-        setTotalUserCount: (totalUserCount) => dispatch(mapDispatch.setTotalUserCountAC(totalUserCount)),
-        setFetching: (fetching) => dispatch(mapDispatch.setFetchingAC(fetching))
-    }
-};
-// Создание и настройка коннект данных, методов и компаненты
-export default connect(mapStateToProps, mapDispatchToProps)(UsersContainer);
+
+export default connect(mapStateToProps, {
+    follow,
+    unFollow,
+    setUsers,
+    setCurrentPage,
+    setTotalUserCount,
+    setFetching
+})(UsersContainer);
 
