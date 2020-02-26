@@ -12,8 +12,8 @@ const Profile = (props) => {
 
     return (
         <div>
-            <ProfileInfo photo={props.data.photos.small}
-                         aboutMe={props.data.aboutMe}/>
+            <ProfileInfo photo={props.data.photos.large}
+                         status={props.data.aboutMe}/>
             <MyPostsContainer/>
         </div>
     )

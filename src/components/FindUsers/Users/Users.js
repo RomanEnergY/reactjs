@@ -2,6 +2,7 @@ import React from 'react';
 import s from './Users.module.css';
 import user_png_loc from "../../../assets/images/user1.png";
 import {NavLink} from "react-router-dom";
+import PreloaderMini from "../../common/preloader/PreloaderMini";
 
 const Users = (props) => {
     const pagesCount = Math.ceil(props.totalUserCount / props.pageSize); // Делим всх пользователей на станицы и округляем их в большую сторону
@@ -10,9 +11,10 @@ const Users = (props) => {
         pages.push(i);
     }
     const users = props.users.map(u => {
+        const followingInProgress = props.followingInProgress.some(id => id === u.id); // если в массиве есть пользователей есть данным id (return true), значит по данному id получаем ответ
         const followBut = u.followed
-            ? <button onClick={() => props.unFollow(u.id)}>UnFollowed</button> // отписаться
-            : <button onClick={() => props.follow(u.id)}>Followed</button>; // подписаться
+            ? followingInProgress ? <PreloaderMini/> : <button onClick={() => props.unFollow(u.id)}>UnFollowed</button> // отписаться
+            : followingInProgress ? <PreloaderMini/> : <button onClick={() => props.follow(u.id)}>Followed</button>; // подписаться
 
         const photosUser = u.photos.small === null ? user_png_loc : u.photos.small;
 
@@ -37,10 +39,6 @@ const Users = (props) => {
                         <div>{`status=${u.status}`}</div>
                         <div>{`followed=${u.followed}`}</div>
                     </span>
-                    <span>
-                        <div>{`{u.location.country}`}</div>
-                        <div>{`{u.location.city}`}</div>
-                    </span>
                 </span>
 
             </div>
@@ -59,7 +57,7 @@ const Users = (props) => {
                             }}>{p}</button>
                     })}
                 </div>
-                <div>
+                <div className={s.wrapper}>
                     {users}
                 </div>
             </div>

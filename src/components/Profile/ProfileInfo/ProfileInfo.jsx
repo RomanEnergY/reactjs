@@ -8,7 +8,7 @@ const ProfileInfo = (props) => {
                 <img src={props.photo}/>
             </div>
             <div className={s.descriptionBlock}>
-                {props.aboutMe}
+                {!props.status ? 'Пусто' : props.status}
             </div>
         </div>
     )

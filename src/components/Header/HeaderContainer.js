@@ -3,19 +3,26 @@ import {connect} from "react-redux";
 import Header from "./Header";
 import * as axios from "axios";
 import {setFetching, setAuthUserData} from "../../redux/AuthReducer";
+import {usersAPI as api} from "../../api/api";
 
 class HeaderContainer extends React.Component {
 
     componentDidMount() {
         this.props.setFetching(true);
-        axios.get(`https://social-network.samuraijs.com/api/1.0/auth/me`, {withCredentials: true})
+        api.getAuthMe()
             .then(response => {
-                    if (response.data.resultCode === 0) {
-                        this.props.setAuthUserData(response.data.data, response.data.messages);
-                    }
-                    this.props.setFetching(false);
-                }
-            );
+                this.props.setAuthUserData(response.data, response.messages);
+                this.props.setFetching(false);
+            });
+
+        // axios.get(`https://social-network.samuraijs.com/api/1.0/auth/me`, {withCredentials: true})
+        //     .then(response => {
+        //             if (response.data.resultCode === 0) {
+        //                 this.props.setAuthUserData(response.data.data, response.data.messages);
+        //             }
+        //             this.props.setFetching(false);
+        //         }
+        //     );
     }
 
     render() {

@@ -1,12 +1,13 @@
 import React from 'react'
 import preloader from "../../../assets/images/preloader.svg";
+import s from './Preloader.module.css';
 
-const Preloader = () => {
+const PreloaderMini = () => {
     return (
-        <div>
+        <div className={s.widthMini}>
             <img src={preloader} alt={""}/>
         </div>
     )
 };
 
-export default Preloader;
+export default PreloaderMini;
