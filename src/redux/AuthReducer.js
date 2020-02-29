@@ -1,3 +1,11 @@
+import {api} from "../api/api";
+
+const SET_USER_DATA = 'SET_USER_DATA';
+const SET_FETCHING_AUTH_DATA = 'SET_FETCHING_AUTH_DATA';
+
+const setAuthUserData = (id, login, email, messages) => ({type: SET_USER_DATA, id, login, email, messages});
+const setFetching = (fetching) => ({type: SET_FETCHING_AUTH_DATA, fetching});
+
 const initialState = {
     data: {
         id: null,
@@ -9,11 +17,16 @@ const initialState = {
     isFetching: false, // флаг текущего выполнения запроса на сервер
 };
 
-const SET_USER_DATA = 'SET_USER_DATA';
-export const setAuthUserData = (data, messages) => ({type: SET_USER_DATA, data, messages});
-
-const SET_FETCHING = 'SET_FETCHING';
-export const setFetching = (fetching) => ({type: SET_FETCHING, fetching});
+export const getAuthMeData = () => {
+    return (dispatch) => {
+        dispatch(setFetching(true));
+        api.getAuthMe()
+            .then(response => {
+                dispatch(setAuthUserData(response.data.id, response.data.login, response.data.email, response.messages));
+                dispatch(setFetching(false));
+            });
+    };
+};
 
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -21,13 +34,15 @@ export const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 data: {
-                    ...action.data
+                    id: action.id,
+                    login: action.login,
+                    email: action.email
                 },
                 messages: [...action.messages],
                 isAuth: true
             };
 
-        case SET_FETCHING:
+        case SET_FETCHING_AUTH_DATA:
             return {...state, isFetching: action.fetching};
 
         default:

@@ -1,10 +1,14 @@
+import {api} from "../api/api";
+
 const ADD_POST = 'ADD-POST';
 const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
+const SET_FETCHING_PROFILE_USER = 'SET_FETCHING_PROFILE_USER';
 
 export const addPost = () => ({type: ADD_POST});
 export const updateNewPostText = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
 export const setUserProfile = (data) => ({type: SET_USER_PROFILE, data: data});
+const setFetching = (fetching) => ({type: SET_FETCHING_PROFILE_USER, fetching});
 
 const initialState = {
     posts: [
@@ -12,7 +16,19 @@ const initialState = {
         {id: 2, message: 'It\'s my first post', likesCount: 7}
     ],
     newPostText: '',
-    data: ''
+    data: '',
+    fetching: false
+};
+
+export const getProfileUser = (userId) => {
+    return (dispatch) => {
+        dispatch(setFetching(true));
+        api.getProfileUser(userId)
+            .then(response => {
+                dispatch(setUserProfile(response.data));
+                dispatch(setFetching(false));
+            });
+    }
 };
 
 export const profileReducer = (state = initialState, action) => {
@@ -37,6 +53,11 @@ export const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 data: action.data
+            };
+        case SET_FETCHING_PROFILE_USER:
+            return {
+                ...state,
+                fetching: action.fetching
             };
         default:
             return state;

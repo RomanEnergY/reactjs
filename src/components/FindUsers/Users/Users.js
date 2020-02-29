@@ -5,16 +5,23 @@ import {NavLink} from "react-router-dom";
 import PreloaderMini from "../../common/preloader/PreloaderMini";
 
 const Users = (props) => {
-    const pagesCount = Math.ceil(props.totalUserCount / props.pageSize); // Делим всх пользователей на станицы и округляем их в большую сторону
     let pages = [];
-    for (let i = 1; i <= pagesCount; i++) {
+    for (let i = 1; i <= Math.ceil(props.totalUserCount / props.pageSize); i++)
         pages.push(i);
-    }
+
+    const btnPages = pages.map(pageNumber => {
+        return <button
+            className={props.currentPage === pageNumber && s.selectedPage}
+            onClick={(e) => props.onPageChanged(pageNumber)}>{pageNumber}</button>
+    });
+
     const users = props.users.map(u => {
         const followingInProgress = props.followingInProgress.some(id => id === u.id); // если в массиве есть пользователей есть данным id (return true), значит по данному id получаем ответ
-        const followBut = u.followed
-            ? followingInProgress ? <PreloaderMini/> : <button onClick={() => props.unFollow(u.id)}>UnFollowed</button> // отписаться
-            : followingInProgress ? <PreloaderMini/> : <button onClick={() => props.follow(u.id)}>Followed</button>; // подписаться
+        const followBut = followingInProgress
+            ? <PreloaderMini/>
+            : u.followed
+                ? <button className={s.follow} onClick={() => props.unFollowUser(u.id)}>UnFollowed</button> // отписаться
+                : <button className={s.unFollow} onClick={() => props.followUser(u.id)}>Followed</button>; // подписаться
 
         const photosUser = u.photos.small === null ? user_png_loc : u.photos.small;
 
@@ -49,13 +56,7 @@ const Users = (props) => {
         <div className={s.dialogs}>
             <div className={s.messages}>
                 <div>
-                    {pages.map(p => {
-                        return <button
-                            className={props.currentPage === p && s.selectedPage}
-                            onClick={(e) => {
-                                props.onPageChanged(p)
-                            }}>{p}</button>
-                    })}
+                    {btnPages}
                 </div>
                 <div className={s.wrapper}>
                     {users}

@@ -1,18 +1,8 @@
 import React from 'react';
 import {connect} from "react-redux";
-import * as axios from "axios";
 import Users from "./Users/Users";
 import Preloader from "../common/preloader/Preloader";
-import {
-    follow,
-    setCurrentPage,
-    setFetching,
-    setFollowingInProgress,
-    setTotalUserCount,
-    setUsers,
-    unFollow
-} from "../../redux/UsersReducer";
-import {usersAPI as api} from "../../api/api";
+import {followUser, getUsers, onPageChanged, unFollowUser} from "../../redux/UsersReducer";
 
 /*
     По средством connect передаем в UsersContainer данные,
@@ -22,61 +12,18 @@ import {usersAPI as api} from "../../api/api";
 class UsersContainer extends React.Component {
     // по средством connect получаем this.props
     componentDidMount() {
-        this.getUserPageNumber(this.props.currentPage);
+        this.props.getUsers(this.props.usersData.currentPage);
     }
-
-    componentWillUnmount() {
-
-    }
-
-    // метод запроса на сервер данных
-    getUserPageNumber = (pageNumber) => {
-        this.props.setFetching(true);
-        api.getUsers(pageNumber, this.props.pageSize)
-            .then(response => {
-                this.props.setTotalUserCount(response.totalCount);
-                this.props.setUsers(response.items);
-                this.props.setFetching(false);
-            });
-    };
-
-
-    onPageChanged = (pageNumber) => {
-        this.props.setCurrentPage(pageNumber);
-        this.getUserPageNumber(pageNumber);
-    };
-
-    follow = (id) => {
-        this.props.setFollowingInProgress(true, id);
-        api.follow(id)
-            .then(response => {
-                this.props.follow(id);
-                this.props.setFollowingInProgress(false, id);
-            })
-    };
-
-    unFollow = (id) => {
-        this.props.setFollowingInProgress(true, id);
-        api.unFollow(id)
-            .then(response => {
-                this.props.unFollow(id);
-                this.props.setFollowingInProgress(false, id);
-            })
-    };
 
     render() {
         return <>
             {this.props.isFetching
                 ? <Preloader/>
-                : <Users
-                    totalUserCount={this.props.totalUserCount}
-                    pageSize={this.props.pageSize}
-                    currentPage={this.props.currentPage}
-                    users={this.props.users}
-                    unFollow={this.unFollow}
-                    follow={this.follow}
-                    onPageChanged={this.onPageChanged}
-                    followingInProgress={this.props.followingInProgress}/>
+                : <Users {...this.props.usersData}
+                         onPageChanged={this.props.onPageChanged}
+                         followUser={this.props.followUser}
+                         unFollowUser={this.props.unFollowUser}
+                />
             }
         </>
     }
@@ -84,22 +31,21 @@ class UsersContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        users: state.usersPage.users,
-        pageSize: state.usersPage.pageSize,
-        currentPage: state.usersPage.currentPage,
-        totalUserCount: state.usersPage.totalUserCount,
         isFetching: state.usersPage.isFetching,
-        followingInProgress: state.usersPage.followingInProgress
+        usersData: {
+            users: state.usersPage.users,
+            pageSize: state.usersPage.pageSize,
+            currentPage: state.usersPage.currentPage,
+            totalUserCount: state.usersPage.totalUserCount,
+            followingInProgress: state.usersPage.followingInProgress
+        }
     }
 };
 
 export default connect(mapStateToProps, {
-    follow,
-    setCurrentPage,
-    setFetching,
-    setFollowingInProgress,
-    setTotalUserCount,
-    setUsers,
-    unFollow
+    getUsers,
+    onPageChanged,
+    followUser,
+    unFollowUser
 })(UsersContainer);
 

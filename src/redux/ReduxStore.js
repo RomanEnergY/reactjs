@@ -1,9 +1,10 @@
-import {combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, createStore} from "redux";
 import {dialogReducer} from "./DialogReducer";
 import {profileReducer} from "./ProfileReducer";
 import {sidebarReducer} from "./SidebarReducer";
 import {usersReducer} from "./UsersReducer";
 import {authReducer} from "./AuthReducer";
+import thunkMiddleware from "redux-thunk";
 
 /* reducers - список объектов которое хранит состояния/поведения
 передача компоненту данных через пропсы осуществляется по ключу
@@ -18,7 +19,7 @@ let reducers = combineReducers({
 });
 
 // store - реализация библиотеки "redux"
-const store = createStore(reducers);
+const store = createStore(reducers, applyMiddleware(thunkMiddleware)); // applyMiddleware(thunkMiddleware) - внедрение возможности в Reducer вызывать dispatch
 
 export default store;
 

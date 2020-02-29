@@ -1,33 +1,86 @@
+import {api} from "../api/api";
+
 const SET_USERS = 'SET_USERS';
 const FOLLOW = 'FOLLOW';
 const UN_FOLLOW = 'UN_FOLLOW';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_TOTAL_USER_COUNT = 'SET_TOTAL_USER_COUNT';
-const SET_FETCHING = 'SET_FETCHING';
+const SET_FETCHING_USER = 'SET_FETCHING_USER';
 const SET_FOLLOWING_IN_PROGRESS = 'SET_FOLLOWING_IN_PROGRESS';
 
-export const follow = (userId) => ({type: FOLLOW, userId});
-export const unFollow = (userId) => ({type: UN_FOLLOW, userId});
-export const setUsers = (users) => ({type: SET_USERS, users});
-export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage});
-export const setTotalUserCount = (totalUserCount) => ({type: SET_TOTAL_USER_COUNT, totalUserCount});
-export const setFetching = (fetching) => ({type: SET_FETCHING, fetching});
-export const setFollowingInProgress = (isFetching, userId) => ({type: SET_FOLLOWING_IN_PROGRESS, isFetching, userId});
+const follow = (userId) => ({type: FOLLOW, userId});
+const unFollow = (userId) => ({type: UN_FOLLOW, userId});
+const setUsers = (users, totalUserCount) => ({type: SET_USERS, users, totalUserCount});
+const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage});
+const setFetching = (fetching) => ({type: SET_FETCHING_USER, fetching});
+const setFollowingInProgress = (isFetching, userId) => ({type: SET_FOLLOWING_IN_PROGRESS, isFetching, userId});
+
+const pageSizeDefault = 24;
 
 const initialState = {
     users: [],
-    pageSize: 24,
+    pageSize: pageSizeDefault,
     currentPage: 1,
     totalUserCount: 0,
     isFetching: false, // флаг получения данных
     followingInProgress: []
 };
 
+/**
+ * Метод по средством замыкания передаваемых данных в теле которого вызываются комбинации методов dispatch простых
+ * объектов (яркий пример: транзакция бизнес логики)
+ *
+ * @param pageNumber
+ * @param pageSize
+ */
+export const getUsers = (pageNumber, pageSize = pageSizeDefault) => {
+    return (dispatch) => {
+        dispatch(setFetching(true));
+        api.getUsers(pageNumber, pageSize)
+            .then(response => {
+                dispatch(setFetching(false));
+                dispatch(setUsers(response.items, response.totalCount));
+            });
+    };
+};
+
+export const onPageChanged = (pageNumber, pageSize = pageSizeDefault) => {
+    return (dispatch) => {
+        dispatch(setCurrentPage(pageNumber));
+        dispatch(getUsers(pageNumber, pageSize))
+    }
+};
+
+export const followUser = (userId) => {
+    return (dispatch) => {
+        dispatch(setFollowingInProgress(true, userId));
+        api.follow(userId)
+            .then(response => {
+                dispatch(follow(userId));
+                dispatch(setFollowingInProgress(false, userId));
+            });
+    };
+};
+
+export const unFollowUser = (userId) => {
+    return (dispatch) => {
+        dispatch(setFollowingInProgress(true, userId));
+        api.unFollow(userId)
+            .then(response => {
+                dispatch(unFollow(userId));
+                dispatch(setFollowingInProgress(false, userId));
+            });
+    };
+};
+
 export const usersReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USERS:
             // return {...state, users: [...state.users, ...action.users]}; // Поверхностная копия, в users поверхностно скопировать users и добавить users из action, добавляем в конец массива
-            return {...state, users: action.users};
+            return {
+                ...state,
+                users: action.users,
+                totalUserCount: action.totalUserCount
+            };
         case FOLLOW:
             return {
                 ...state,
@@ -59,23 +112,17 @@ export const usersReducer = (state = initialState, action) => {
                 ...state,
                 currentPage: action.currentPage
             };
-        case SET_TOTAL_USER_COUNT:
-            return {
-                ...state,
-                totalUserCount: action.totalUserCount
-            };
-        case SET_FETCHING:
+        case SET_FETCHING_USER:
             return {
                 ...state,
                 isFetching: action.fetching
             };
         case SET_FOLLOWING_IN_PROGRESS:
-            debugger
             return {
                 ...state,
                 followingInProgress: action.isFetching /* если осуществляем запрос*/
                     ? [...state.followingInProgress, action.userId] /* добавляем id пользователя */
-                    : state.followingInProgress.filter(id => id != action.userId) /* удаляем id пользователя если id === action.userId (метод filter return Object[] */
+                    : state.followingInProgress.filter(id => id !== action.userId) /* удаляем id пользователя если id === action.userId (метод filter return Object[] */
             };
         default:
             return state;

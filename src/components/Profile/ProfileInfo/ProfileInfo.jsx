@@ -5,10 +5,10 @@ const ProfileInfo = (props) => {
     return (
         <div>
             <div>
-                <img src={props.photo}/>
+                <img className={s.profilePhoto} src={props.photo}/>
             </div>
             <div className={s.descriptionBlock}>
-                {!props.status ? 'Пусто' : props.status}
+                {!props.fullName ? 'Пусто' : props.fullName}
             </div>
         </div>
     )

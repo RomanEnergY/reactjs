@@ -1,13 +1,13 @@
 import React from 'react';
 import Profile from "./Profile";
-import * as axios from "axios";
 import {connect} from "react-redux";
-import {setUserProfile} from "../../redux/ProfileReducer";
+import {getProfileUser} from "../../redux/ProfileReducer";
 import {withRouter} from "react-router-dom";
+import {getAuthMeData} from "../../redux/AuthReducer";
+import Preloader from "../common/preloader/Preloader";
 
 
 class ProfileContainer extends React.Component {
-
     componentDidMount() {
         let userId = !this.props.match.params.userId
             ? !this.props.authId
@@ -15,20 +15,12 @@ class ProfileContainer extends React.Component {
                 : this.props.authId
             : this.props.match.params.userId;
 
-        this.getUserId(userId);
+        this.props.getProfileUser(userId);
     }
-
-    // метод запроса на сервер данных
-    getUserId = (id) => {
-        axios.get(`https://social-network.samuraijs.com/api/1.0/profile/${id}`)
-            .then(response => {
-                this.props.setUserProfile(response.data);
-            });
-    };
 
     render() {
         return (
-            <Profile data={this.props.data}/>
+            !this.props.data ? <Preloader/> : <Profile data={this.props.data}/>
         )
     }
 };
@@ -36,10 +28,11 @@ class ProfileContainer extends React.Component {
 const mapStateToProps = (state) => {
     return {
         data: state.profilePage.data,
-        authId: state.auth.data.id,
+        fetching: state.profilePage.data,
+        authId: state.auth.data.id
     }
 };
 
 const withRouterProfileContainer = withRouter(ProfileContainer);
 
-export default connect(mapStateToProps, {setUserProfile})(withRouterProfileContainer);
+export default connect(mapStateToProps, {getProfileUser, getAuthMeData})(withRouterProfileContainer);

@@ -1,19 +1,13 @@
 import React from 'react';
-import s from './Profile.module.css';
-import MyPosts from './MyPosts/MyPosts';
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
-import Preloader from "../common/preloader/Preloader";
+import user_png_loc from "../../assets/images/user1.png";
 
 const Profile = (props) => {
-    if (!props.data) {
-        return <Preloader/>
-    }
-
     return (
         <div>
-            <ProfileInfo photo={props.data.photos.large}
-                         status={props.data.aboutMe}/>
+            <ProfileInfo photo={props.data.photos.large ? props.data.photos.large : user_png_loc}
+                         fullName={props.data.fullName}/>
             <MyPostsContainer/>
         </div>
     )
