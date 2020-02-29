@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import Users from "./Users/Users";
 import Preloader from "../common/preloader/Preloader";
 import {followUser, getUsers, onPageChanged, unFollowUser} from "../../redux/UsersReducer";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 
 /*
     По средством connect передаем в UsersContainer данные,
@@ -42,10 +43,12 @@ const mapStateToProps = (state) => {
     }
 };
 
+let AuthRedirectComponent = withAuthRedirect(UsersContainer);
+
 export default connect(mapStateToProps, {
     getUsers,
     onPageChanged,
     followUser,
     unFollowUser
-})(UsersContainer);
+})(AuthRedirectComponent);
 

@@ -16,7 +16,6 @@ export const api = {
             .then(response => {
                 return response.data;
             })
-
     },
 
     getProfileUser(userId) {

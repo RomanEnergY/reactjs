@@ -10,7 +10,7 @@ const Header = (props) => {
             {props.isFetching
                 ? <Preloader/>
                 : props.isAuth
-                    ? `Hello ${props.login}`
+                    ? <> {`Hello ${props.login}: id=${props.id}: email=${props.email}`}</>
                     : <NavLink to={'/login'}>Login</NavLink>}
         </div>
     </header>

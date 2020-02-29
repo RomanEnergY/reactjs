@@ -22,8 +22,10 @@ export const getAuthMeData = () => {
         dispatch(setFetching(true));
         api.getAuthMe()
             .then(response => {
-                dispatch(setAuthUserData(response.data.id, response.data.login, response.data.email, response.messages));
                 dispatch(setFetching(false));
+                if (response.resultCode === 0) {
+                    dispatch(setAuthUserData(response.data.id, response.data.login, response.data.email, response.messages));
+                }
             });
     };
 };
