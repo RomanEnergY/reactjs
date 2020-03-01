@@ -5,7 +5,6 @@ import Preloader from "../common/preloader/Preloader";
 import {followUser, getUsers, onPageChanged, unFollowUser} from "../../redux/UsersReducer";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
-import Dialogs from "../Dialogs/Dialogs";
 
 /*
     По средством connect передаем в UsersContainer данные,
@@ -44,15 +43,6 @@ const mapStateToProps = (state) => {
         }
     }
 };
-
-// let AuthRedirectComponent = withAuthRedirect(UsersContainer);
-//
-// export default connect(mapStateToProps, {
-//     getUsers,
-//     onPageChanged,
-//     followUser,
-//     unFollowUser
-// })(AuthRedirectComponent);
 
 /**
  * Метод compose поочередно вызывает вложенные методы, с параметром

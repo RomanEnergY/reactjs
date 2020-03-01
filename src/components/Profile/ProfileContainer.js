@@ -35,10 +35,6 @@ const mapStateToProps = (state) => {
     }
 };
 
-// let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
-// let withRouterProfileContainer = withRouter(AuthRedirectComponent);
-// export default connect(mapStateToProps, {getProfileUser, getAuthMeData})(withRouterProfileContainer);
-
 /**
  * Метод compose поочередно вызывает вложенные методы, с параметром
  * 1. Вызывает withAuthRedirect(Dialogs), получает данные и далее как параметр передает в следующий метод в сторону начала

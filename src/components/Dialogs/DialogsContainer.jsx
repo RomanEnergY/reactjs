@@ -22,10 +22,6 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-// let AuthRedirectComponent = withAuthRedirect(Dialogs);
-// const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(AuthRedirectComponent);
-// export default DialogsContainer;
-
 /**
  * Метод compose поочередно вызывает вложенные методы, с параметром
  * 1. Вызывает withAuthRedirect(Dialogs), получает данные и далее как параметр передает в следующий метод в сторону начала
