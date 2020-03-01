@@ -6,6 +6,7 @@ import {withRouter} from "react-router-dom";
 import {getAuthMeData} from "../../redux/AuthReducer";
 import Preloader from "../common/preloader/Preloader";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
 
 
 class ProfileContainer extends React.Component {
@@ -34,8 +35,17 @@ const mapStateToProps = (state) => {
     }
 };
 
-let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
+// let AuthRedirectComponent = withAuthRedirect(ProfileContainer);
+// let withRouterProfileContainer = withRouter(AuthRedirectComponent);
+// export default connect(mapStateToProps, {getProfileUser, getAuthMeData})(withRouterProfileContainer);
 
-let withRouterProfileContainer = withRouter(AuthRedirectComponent);
-
-export default connect(mapStateToProps, {getProfileUser, getAuthMeData})(withRouterProfileContainer);
+/**
+ * Метод compose поочередно вызывает вложенные методы, с параметром
+ * 1. Вызывает withAuthRedirect(Dialogs), получает данные и далее как параметр передает в следующий метод в сторону начала
+ * 2. connect(mapStateToProps, mapDispatchToProps)(return_method_1) и так далее
+ */
+export default compose(
+    connect(mapStateToProps, {getProfileUser, getAuthMeData}),
+    withRouter,
+    withAuthRedirect
+)(ProfileContainer);

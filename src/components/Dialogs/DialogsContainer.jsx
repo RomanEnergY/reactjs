@@ -3,6 +3,7 @@ import Dialogs from "./Dialogs";
 import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/DialogReducer";
 import {connect} from "react-redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
 
 // Передача данных
 const mapStateToProps = (state) => {
@@ -21,8 +22,16 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-let AuthRedirectComponent = withAuthRedirect(Dialogs);
+// let AuthRedirectComponent = withAuthRedirect(Dialogs);
+// const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(AuthRedirectComponent);
+// export default DialogsContainer;
 
-const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(AuthRedirectComponent);
-
-export default DialogsContainer;
+/**
+ * Метод compose поочередно вызывает вложенные методы, с параметром
+ * 1. Вызывает withAuthRedirect(Dialogs), получает данные и далее как параметр передает в следующий метод в сторону начала
+ * 2. connect(mapStateToProps, mapDispatchToProps)(return_method_1) и так далее
+ */
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    withAuthRedirect
+)(Dialogs);
