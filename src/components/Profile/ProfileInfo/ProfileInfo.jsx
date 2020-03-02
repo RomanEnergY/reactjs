@@ -1,5 +1,6 @@
 import React from 'react';
 import s from './ProfileInfo.module.css';
+import ProfileStatus from "./profileStatus/ProfileStatus";
 
 const ProfileInfo = (props) => {
     return (
@@ -10,6 +11,7 @@ const ProfileInfo = (props) => {
             <div className={s.descriptionBlock}>
                 {!props.fullName ? 'Пусто' : props.fullName}
             </div>
+            <ProfileStatus />
         </div>
     )
 }
