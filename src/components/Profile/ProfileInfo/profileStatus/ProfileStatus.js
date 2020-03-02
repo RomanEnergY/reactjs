@@ -9,23 +9,19 @@ class ProfileStatus extends React.Component {
         newPostElement: React.createRef()
     };
 
-    activateEditMode() {
-        // debugger
-        // this.state.editMode = true;
-        // this.forceUpdate(); // Принудительно перересовать UI (так делать нельзя, только в крайних случаях)
-
+    activateEditMode = () => {
         this.setState({
             editMode: true
         })
     };
 
-    deActivateEditMode() {
+    deActivateEditMode = () => {
         this.setState({
             editMode: false
         })
     };
 
-    onChangeStatus() {
+    onChangeStatus = () => {
         this.setState({
             status: this.state.newPostElement.current.value
         });
@@ -36,11 +32,11 @@ class ProfileStatus extends React.Component {
             status:
             <div>
                 {!this.state.editMode
-                    ? <span onDoubleClick={this.activateEditMode.bind(this)}>{this.state.status}</span>
+                    ? <span onDoubleClick={this.activateEditMode}>{this.state.status}</span>
                     : <input
                         autoFocus={true} // Вставка фокуса в компонент
-                        onChange={this.onChangeStatus.bind(this)}
-                        onBlur={this.deActivateEditMode.bind(this)}
+                        onChange={this.onChangeStatus}
+                        onBlur={this.deActivateEditMode}
                         ref={this.state.newPostElement}
                         value={this.state.status}/>
                 }
