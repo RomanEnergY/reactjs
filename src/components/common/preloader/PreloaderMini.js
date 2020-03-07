@@ -4,9 +4,7 @@ import s from './Preloader.module.css';
 
 const PreloaderMini = () => {
     return (
-        <div className={s.widthMini}>
-            <img src={preloader} alt={""}/>
-        </div>
+        <img className={s.widthMini} src={preloader} alt={""}/>
     )
 };
 

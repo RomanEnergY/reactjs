@@ -1,56 +1,68 @@
 import React from 'react';
 import {compose} from "redux";
 import {connect} from "react-redux";
+import {updateStatus} from "../../../../redux/ProfileReducer";
+import PreloaderMini from "../../../common/preloader/PreloaderMini";
 
 class ProfileStatus extends React.Component {
     state = {
         editMode: false,
-        status: 'ProfileStatus - Hello',
-        newPostElement: React.createRef()
+        statusText: this.props.status.data
     };
 
+    componentDidMount() {
+
+    }
+
     activateEditMode = () => {
-        this.setState({
-            editMode: true
-        })
+        if (this.props.status.userId === this.props.authId) {
+            this.setState({
+                editMode: true,
+                statusText: this.props.status.data
+            });
+        }
     };
 
     deActivateEditMode = () => {
         this.setState({
             editMode: false
-        })
+        });
+
+        if (this.state.statusText !== this.props.status.data)
+            this.props.updateStatus(this.state.statusText);
     };
 
-    onChangeStatus = () => {
+    onChangeStatus = (e) => {
         this.setState({
-            status: this.state.newPostElement.current.value
+            statusText: e.currentTarget.value
         });
     };
 
     render() {
         return <div>
-            status:
-            <div>
-                {!this.state.editMode
-                    ? <span onDoubleClick={this.activateEditMode}>{this.state.status}</span>
-                    : <input
-                        autoFocus={true} // Вставка фокуса в компонент
-                        onChange={this.onChangeStatus}
-                        onBlur={this.deActivateEditMode}
-                        ref={this.state.newPostElement}
-                        value={this.state.status}/>
+            <span onDoubleClick={this.activateEditMode}>status:
+                {this.props.status.fetching
+                    ? <PreloaderMini/>
+                    : !this.state.editMode
+                        ? <span onDoubleClick={this.activateEditMode}>{` ${this.props.status.data || '---'}`}</span>
+                        : <input
+                            autoFocus={true} // Вставка фокуса в компонент
+                            onChange={this.onChangeStatus}
+                            onBlur={this.deActivateEditMode}
+                            value={this.state.statusText}/>
                 }
-            </div>
+            </span>
         </div>
     }
 };
 
 const mapStateToProps = (state) => {
     return {
-        status: "ProfileStatus - Hello"
+        status: state.profilePage.status,
+        authId: state.auth.data.id
     }
 };
 
 export default compose(
-    connect(mapStateToProps)
+    connect(mapStateToProps, {updateStatus})
 )(ProfileStatus);

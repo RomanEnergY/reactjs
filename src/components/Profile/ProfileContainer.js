@@ -1,7 +1,7 @@
 import React from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
-import {getProfileUser} from "../../redux/ProfileReducer";
+import {setProfileUserByUserId, setStatusByUserId} from "../../redux/ProfileReducer";
 import {withRouter} from "react-router-dom";
 import {getAuthMeData} from "../../redux/AuthReducer";
 import Preloader from "../common/preloader/Preloader";
@@ -17,20 +17,24 @@ class ProfileContainer extends React.Component {
                 : this.props.authId
             : this.props.match.params.userId;
 
-        this.props.getProfileUser(userId);
+        this.props.setProfileUserByUserId(userId);
+        this.props.setStatusByUserId(userId);
     }
 
     render() {
         return (
-            !this.props.data ? <Preloader/> : <Profile data={this.props.data}/>
+            !this.props.data
+                ? <Preloader/>
+                : <Profile
+                    data={this.props.data}/>
         )
     }
-};
+}
 
 const mapStateToProps = (state) => {
     return {
         data: state.profilePage.data,
-        fetching: state.profilePage.data,
+        fetching: state.profilePage.fetching,
         authId: state.auth.data.id
     }
 };
@@ -41,7 +45,7 @@ const mapStateToProps = (state) => {
  * 2. connect(mapStateToProps, mapDispatchToProps)(return_method_1) и так далее
  */
 export default compose(
-    connect(mapStateToProps, {getProfileUser, getAuthMeData}),
+    connect(mapStateToProps, {setProfileUserByUserId, setStatusByUserId, getAuthMeData}),
     withRouter,
     // withAuthRedirect
 )(ProfileContainer);

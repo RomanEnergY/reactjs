@@ -9,6 +9,50 @@ const instance = axios.create({
     }
 });
 
+export const api1 = {
+    profile: {
+        /**
+         /**
+         * Update status for current authorized user
+         * @param newStatus
+         * @returns {Promise<T>}
+         */
+        updateStatus(newStatus) {
+            return instance.put(`profile/status`, {
+                status: newStatus
+            })
+                .then(response => {
+                    if (response.data.resultCode === 0)
+                        return response;
+                });
+        },
+
+        /**
+         * Returns text status of requested user
+         * @param userId
+         * @returns {Q.Promise<any> | * | void | PromiseLike<any>}
+         */
+        getStatusByUserId(userId) {
+            return instance.get(`profile/status/${userId}`)
+                .then(response => {
+                    return response;
+                });
+        },
+
+        /**
+         * Returns user profile information
+         * @param userId
+         * @returns {Q.Promise<any> | * | void | PromiseLike<any>}
+         */
+        getProfileUserByUserId(userId) {
+            return instance.get(`profile/${userId}`)
+                .then(response => {
+                    return response;
+                });
+        }
+    }
+};
+
 
 export const api = {
     getAuthMe() {
@@ -18,12 +62,6 @@ export const api = {
             })
     },
 
-    getProfileUser(userId) {
-        return instance.get(`profile/${userId}`)
-            .then(response => {
-                return response;
-            });
-    },
 
     /**
      * Получение данных о пользователях
