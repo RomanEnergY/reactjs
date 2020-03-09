@@ -10,10 +10,6 @@ class ProfileStatus extends React.Component {
         statusText: this.props.status.data
     };
 
-    componentDidMount() {
-
-    }
-
     activateEditMode = () => {
         if (this.props.status.userId === this.props.authId) {
             this.setState({
@@ -54,7 +50,7 @@ class ProfileStatus extends React.Component {
             </span>
         </div>
     }
-};
+}
 
 const mapStateToProps = (state) => {
     return {
