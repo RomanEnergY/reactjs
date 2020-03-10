@@ -1,8 +1,6 @@
 const ADD_MESSAGE = 'ADD-MESSAGE';
-const UPDATE_NEW_MESSAGES_BODY_TEXT = 'UPDATE-NEW-MESSAGES-BODY-TEXT';
 
-export const addMessageAction = () => ({type: ADD_MESSAGE});
-export const updateNewMessagesBodyTextAction = (text) => ({type: UPDATE_NEW_MESSAGES_BODY_TEXT, newText: text});
+const addMessageAction = (message) => ({type: ADD_MESSAGE, message});
 
 const initialState = {
     dialogs: [
@@ -17,29 +15,31 @@ const initialState = {
         {id: 1, message: 'Hi'},
         {id: 2, message: 'How is your it-kamasutra?'},
         {id: 3, message: 'Yo'}
-    ],
-    newMessagesBody: '',
+    ]
+};
+
+export const addMessage = (message) => {
+    return (dispatch) => {
+        dispatch(addMessageAction(message));
+    }
 };
 
 export const dialogReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_MESSAGE:
-            if (state.newMessagesBody.length > 0) {
+            if (action.message && action.message.length > 0) {
                 return {
                     ...state,
                     messages: [
                         ...state.messages,
-                        {id: state.messages.length + 1, message: state.newMessagesBody}],
-                    newMessagesBody: ''
+                        {
+                            id: state.messages.length + 1,
+                            message: action.message
+                        }
+                    ]
                 };
             }
             return state;
-
-        case UPDATE_NEW_MESSAGES_BODY_TEXT:
-            return {
-                ...state,
-                newMessagesBody: action.newText
-            };
 
         default:
             return state;

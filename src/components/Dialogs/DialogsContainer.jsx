@@ -1,6 +1,6 @@
 import React from 'react';
 import Dialogs from "./Dialogs";
-import {addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/DialogReducer";
+import {addMessage, addMessageAction, updateNewMessagesBodyTextAction} from "../../redux/DialogReducer";
 import {connect} from "react-redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
@@ -17,8 +17,7 @@ const mapStateToProps = (state) => {
 // Передача методов
 const mapDispatchToProps = (dispatch) => {
     return {
-        onClickButton: () => dispatch(addMessageAction()),
-        onChange: (text) => dispatch(updateNewMessagesBodyTextAction(text))
+        addMessage: (message) => dispatch(addMessage(message))
     }
 };
 

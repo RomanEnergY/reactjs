@@ -1,26 +1,27 @@
 import {api1} from "../api/api";
 
 const ADD_POST = 'ADD-POST';
-const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const SET_STATUS_DATA = 'SET_STATUS_DATA';
 const UPDATE_STATUS = 'UPDATE_STATUS';
 const SET_STATUS_FETCHING = 'SET_STATUS_FETCHING';
 const SET_FETCHING = 'SET_FETCHING';
+const SET_FETCHING_POST = 'SET_FETCHING_POST';
 
-export const addPost = () => ({type: ADD_POST});
-export const updateNewPostText = (text) => ({type: UPDATE_NEW_POST_TEXT, newText: text});
+const addPost = (message) => ({type: ADD_POST, message});
 const setUserProfile = (data) => ({type: SET_USER_PROFILE, data});
 const setStatusData = (userId, data) => ({type: SET_STATUS_DATA, userId, data});
 const updateMyStatus = (data) => ({type: UPDATE_STATUS, data});
 const setStatusFetching = (fetching) => ({type: SET_STATUS_FETCHING, fetching});
 const setFetching = (fetching) => ({type: SET_FETCHING, fetching});
+const setFetchingPost = (fetchingPost) => ({type: SET_FETCHING_POST, fetchingPost});
 
 const initialState = {
     posts: [
         {id: 1, message: 'Hi, how are you?', likesCount: 12},
         {id: 2, message: 'It\'s my first post', likesCount: 7}
     ],
+    fetchingPost: false,
     newPostText: '',
     data: '',
     status: {
@@ -29,6 +30,14 @@ const initialState = {
         fetching: false
     },
     fetching: false
+};
+
+export const addNewPost = (message) => {
+    return (dispatch) => {
+        dispatch(setFetchingPost(true));
+        dispatch(addPost(message));
+        dispatch(setFetchingPost(true));
+    }
 };
 
 export const setProfileUserByUserId = (userId) => {
@@ -77,21 +86,21 @@ export const updateStatus = (newStatus) => {
 export const profileReducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_POST:
-            if (state.newPostText.length > 0) {
+            if (action.message && action.message.length > 0) {
                 return {
                     ...state,
                     posts: [
-                        {id: state.posts.length + 1, message: state.newPostText, likesCount: 0},
-                        ...state.posts],
-                    newPostText: ''
+                        {
+                            id: state.posts.length + 1,
+                            message: action.message,
+                            likesCount: 0
+                        },
+                        ...state.posts
+                    ]
                 };
             }
             return state;
-        case UPDATE_NEW_POST_TEXT:
-            return {
-                ...state,
-                newPostText: action.newText
-            };
+
         case SET_USER_PROFILE:
             return {
                 ...state,
@@ -131,6 +140,13 @@ export const profileReducer = (state = initialState, action) => {
                 ...state,
                 fetching: action.fetching
             };
+
+        case SET_FETCHING_POST:
+            return {
+                ...state,
+                fetchingPost: action.fetchingPost
+            };
+
         default:
             return state;
     }

@@ -16,25 +16,16 @@ const Login = (props) => {
 const LoginForm = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
-            <Field component={'input'} name={'login'} placeholder={'Login'}/>
-            <Field component={'input'} name={'password'} placeholder={'Password'}/>
+            <div><Field component={'input'} name={'login'} placeholder={'Login'}/></div>
+            <div><Field component={'input'} name={'password'} placeholder={'Password'}/></div>
             <div><Field component={'input'} type={'checkbox'} name={'rememberMe'}/>Remember me</div>
-            <div><button>Login</button></div>
+            <div>
+                <button>Login</button>
+            </div>
         </form>
     )
 };
 
-/**
- * Компонент обертка lib "redux-form":
- * file: ReduxStore.js
- * import {reducer as formReducer} from "redux-form";
- * let reducers = combineReducers({
- *  ...
- *  form: formReducer
- * });
- *
- * store.getState().form.login...
- */
 const LoginReduxForm = reduxForm({
     // a unique name for the form
     form: 'login'

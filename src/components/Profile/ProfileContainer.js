@@ -25,8 +25,7 @@ class ProfileContainer extends React.Component {
         return (
             !this.props.data
                 ? <Preloader/>
-                : <Profile
-                    data={this.props.data}/>
+                : <Profile data={this.props.data}/>
         )
     }
 }
