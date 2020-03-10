@@ -10,9 +10,9 @@ const Users = (props) => {
         pages.push(i);
 
     const btnPages = pages.map(pageNumber => {
-        return <button
-            className={props.currentPage === pageNumber && s.selectedPage}
-            onClick={(e) => props.onPageChanged(pageNumber)}>{pageNumber}</button>
+        return <button key={pageNumber}
+                       className={props.currentPage === pageNumber ? s.selectedPage : ''}
+                       onClick={(e) => props.onPageChanged(pageNumber)}>{pageNumber}</button>
     });
 
     const users = props.users.map(u => {
