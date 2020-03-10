@@ -29,7 +29,7 @@ const DialogForm = (props) => {
     return (
         <div>
             <form onSubmit={props.handleSubmit}>
-                <div><Field name={'messageDialog'} component={'input'} placeholder={'Enter your message'}/></div>
+                <div><Field name={'messageDialog'} component={'textarea'} placeholder={'Enter your message'}/></div>
                 <div>
                     <button>Send</button>
                 </div>
