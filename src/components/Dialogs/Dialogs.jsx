@@ -9,7 +9,7 @@ const Dialogs = (props) => {
     const messagesElements = props.messages.map(m => <Message key={m.id} message={m.message}/>);
 
     let onSubmit = (dataForm) => {
-        props.addMessage(dataForm.message);
+        props.addMessage(dataForm.messageDialog);
     };
 
     return (
@@ -29,7 +29,7 @@ const DialogForm = (props) => {
     return (
         <div>
             <form onSubmit={props.handleSubmit}>
-                <div><Field name={'message'} component={'input'} placeholder={'Enter your message'}/></div>
+                <div><Field name={'messageDialog'} component={'input'} placeholder={'Enter your message'}/></div>
                 <div>
                     <button>Send</button>
                 </div>

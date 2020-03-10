@@ -8,7 +8,7 @@ const MyPosts = (props) => {
         <Post key={p.id} message={p.message} likesCount={p.likesCount}/>);
 
     const onSubmit = (formData) => {
-        props.addNewPost(formData.message);
+        props.addNewPost(formData.messagePost);
     };
 
     return (
@@ -26,7 +26,7 @@ const PostForm = (props) => {
     return (
         <div>
             <form onSubmit={props.handleSubmit}>
-                <div><Field component={'input'} name={'message'} placeholder={'Enter your post'}/></div>
+                <div><Field name={'messagePost'} component={'input'}  placeholder={'Enter your post'}/></div>
                 <div>
                     <button>Add post</button>
                 </div>
@@ -34,7 +34,6 @@ const PostForm = (props) => {
         </div>
     )
 };
-
 
 const PostReduxForm = reduxForm({form: 'addNewPost'})(PostForm);
 

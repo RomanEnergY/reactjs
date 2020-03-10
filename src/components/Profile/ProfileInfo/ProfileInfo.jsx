@@ -6,7 +6,7 @@ const ProfileInfo = (props) => {
     return (
         <div>
             <div>
-                <img className={s.profilePhoto} src={props.photo}/>
+                <img className={s.profilePhoto} src={props.photo} alt={""}/>
             </div>
             <div className={s.descriptionBlock}>
                 {!props.fullName ? 'Пусто' : props.fullName}
