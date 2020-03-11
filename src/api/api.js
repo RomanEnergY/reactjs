@@ -50,6 +50,19 @@ export const api1 = {
                     return response;
                 });
         }
+    },
+
+    auth: {
+        login: {
+            post(email, password, rememberMe, captcha) {
+                return instance.post(`auth/login`, {
+                    email, password, rememberMe, captcha
+                })
+                    .then(response => {
+                        return response.data;
+                    })
+            }
+        }
     }
 };
 
