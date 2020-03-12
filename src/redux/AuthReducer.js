@@ -1,12 +1,14 @@
-import {api} from "../api/api";
+import {api1} from "../api/api";
 
 const SET_RESULT_DATA = 'SET_RESULT_DATA';
 const SET_USER_DATA = 'SET_USER_DATA';
 const SET_FETCHING_AUTH_DATA = 'SET_FETCHING_AUTH_DATA';
+const SET_FETCHING_LOGIN = 'SET_FETCHING_LOGIN';
 
 const setAuthResultData = (resultCode, messages) => ({type: SET_RESULT_DATA, resultCode, messages});
 const setAuthUserData = (id, login, email, messages) => ({type: SET_USER_DATA, id, login, email, messages});
 const setFetching = (fetching) => ({type: SET_FETCHING_AUTH_DATA, fetching});
+const setFetchingLogin = (fetchingLogin) => ({type: SET_FETCHING_LOGIN, fetchingLogin});
 
 const initialState = {
     data: {
@@ -18,13 +20,16 @@ const initialState = {
     },
     isAuth: false, // флаг состояния был ли ранее запрос на сервер и получены данные
     isFetching: false, // флаг текущего выполнения запроса на сервер
+    isFetchingLogin: false, // флаг текущего выполнения запроса на сервер -> login
 };
+
 
 export const getAuthMeData = () => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        api.getAuthMe()
+        api1.auth.isAuthMe()
             .then(response => {
+                debugger
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
                 if (response.resultCode === 0)
@@ -35,12 +40,30 @@ export const getAuthMeData = () => {
     };
 };
 
+export const authorizeOnService = (email, password, rememberMe) => {
+    return (dispatch) => {
+        dispatch(setFetchingLogin(true));
+        api1.auth.authorizeOnService(email, password, rememberMe)
+            .then(response => {
+                debugger
+                dispatch(setAuthResultData(response.resultCode, response.messages));
+
+                if (response.resultCode === 0) {
+                    dispatch(getAuthMeData());
+                }
+
+                dispatch(setFetchingLogin(false));
+            });
+    };
+};
+
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_RESULT_DATA:
             return {
                 ...state,
                 data: {
+                    ...state.data,
                     resultCode: action.resultCode,
                     messages: [...action.messages],
                 },
@@ -51,6 +74,7 @@ export const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 data: {
+                    ...state.data,
                     id: action.id,
                     login: action.login,
                     email: action.email

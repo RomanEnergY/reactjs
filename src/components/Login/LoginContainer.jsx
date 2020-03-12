@@ -3,7 +3,7 @@ import {Field, reduxForm} from "redux-form";
 import {Element} from "../common/FormsComntrols/FormsControls";
 import {maxLengthCreator, required} from "../../utils/validators/validator";
 import {connect} from "react-redux";
-import {getAuthMeData} from "../../redux/AuthReducer";
+import {getAuthMeData, authorizeOnService} from "../../redux/AuthReducer";
 import {Redirect} from "react-router-dom";
 
 class LoginContainer extends React.Component {
@@ -17,7 +17,15 @@ class LoginContainer extends React.Component {
 
     handleSubmit = (formData) => {
         console.log(formData);
+        this.props.authorizeOnService(formData.email, formData.password, formData.rememberMe);
     };
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        debugger
+        if (this.props.isFetchingLogin) {
+            debugger
+        }
+    }
 
     render() {
         return (
@@ -31,27 +39,29 @@ class LoginContainer extends React.Component {
     }
 };
 
-const maxLength15 = maxLengthCreator(15);
 const maxLength20 = maxLengthCreator(20);
+const Input = Element('input');
 
 const LoginForm = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
                 <label>Email</label>
-                <Field component={Element('input')}
+                <Field component={Input}
                        name={'email'}
                        placeholder={'Email'}
-                       validate={[required, maxLength15]}/>
+                       validate={[required]}
+                />
             </div>
             <span/>
             <div>
                 <label>Password</label>
-                <Field component={Element('input')}
+                <Field component={Input}
                        type={'password'}
                        name={'password'}
                        placeholder={'Password'}
-                       validate={[required, maxLength20]}/>
+                       validate={[required, maxLength20]}
+                />
             </div>
             <span/>
             <div><Field component={'input'}
@@ -72,11 +82,10 @@ const mapStateToProps = (state) => {
     return {
         id: state.auth.data.id,
         login: state.auth.data.login,
-        email: state.auth.data.email,
-        messages: state.auth.data.messages,
         isAuth: state.auth.isAuth,
-        isFetching: state.auth.isFetching
+        isFetching: state.auth.isFetching,
+        isFetchingLogin: state.auth.isFetchingLogin
     }
 };
 
-export default connect(mapStateToProps, {getAuthMeData})(LoginContainer);
+export default connect(mapStateToProps, {getAuthMeData, authorizeOnService})(LoginContainer);

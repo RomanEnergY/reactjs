@@ -53,29 +53,32 @@ export const api1 = {
     },
 
     auth: {
-        login: {
-            post(email, password, rememberMe, captcha) {
-                return instance.post(`auth/login`, {
-                    email, password, rememberMe, captcha
+        isAuthMe() {
+            return instance.get(`auth/me`)
+                .then(response => {
+                    return response.data;
                 })
-                    .then(response => {
-                        return response.data;
-                    })
-            }
+        },
+
+        authorizeOnService(email, password, rememberMe = false) {
+            return instance.post(`auth/login`, {email, password, rememberMe})
+                .then(response => {
+                    return response.data;
+                })
+        },
+
+        logout() {
+            return instance.delete(`auth/login`)
+                .then(response => {
+                    return response.data;
+                })
         }
+
     }
 };
 
 
 export const api = {
-    getAuthMe() {
-        return instance.get(`auth/me`)
-            .then(response => {
-                return response.data;
-            })
-    },
-
-
     /**
      * Получение данных о пользователях
      * @param currentPage
