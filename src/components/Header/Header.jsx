@@ -9,8 +9,11 @@ const Header = (props) => {
         <div className={s.loginBlock}>
             {props.isFetching
                 ? <Preloader/>
-                : props.isAuth
-                    ? <> {`Hello ${props.login}: id=${props.id}: email=${props.email}`}</>
+                : props.id && props.login
+                    ? <>
+                        {`Hello ${props.login}: id=${props.id}: email=${props.email}`}
+                        <button onClick={props.onClickBtnExit}>Exit</button>
+                    </>
                     : <NavLink to={'/login'}>Login</NavLink>}
         </div>
     </header>

@@ -3,29 +3,16 @@ import {Field, reduxForm} from "redux-form";
 import {Element} from "../common/FormsComntrols/FormsControls";
 import {maxLengthCreator, required} from "../../utils/validators/validator";
 import {connect} from "react-redux";
-import {getAuthMeData, authorizeOnService} from "../../redux/AuthReducer";
+import {authorizeOnService, getAuthMeData} from "../../redux/AuthReducer";
 import {Redirect} from "react-router-dom";
 
 class LoginContainer extends React.Component {
     componentDidMount() {
-        if (!this.props.isAuth) {
-            if (!this.props.isFetching) {
-                this.props.getAuthMeData();
-            }
-        }
     }
 
     handleSubmit = (formData) => {
-        console.log(formData);
         this.props.authorizeOnService(formData.email, formData.password, formData.rememberMe);
     };
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        debugger
-        if (this.props.isFetchingLogin) {
-            debugger
-        }
-    }
 
     render() {
         return (
@@ -82,9 +69,7 @@ const mapStateToProps = (state) => {
     return {
         id: state.auth.data.id,
         login: state.auth.data.login,
-        isAuth: state.auth.isAuth,
-        isFetching: state.auth.isFetching,
-        isFetchingLogin: state.auth.isFetchingLogin
+        isFetching: state.auth.isFetching
     }
 };
 

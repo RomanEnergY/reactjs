@@ -5,7 +5,7 @@ import {setProfileUserByUserId, setStatusByUserId} from "../../redux/ProfileRedu
 import {withRouter} from "react-router-dom";
 import {getAuthMeData} from "../../redux/AuthReducer";
 import Preloader from "../common/preloader/Preloader";
-// import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
 
 
@@ -49,5 +49,5 @@ const mapStateToProps = (state) => {
 export default compose(
     connect(mapStateToProps, {setProfileUserByUserId, setStatusByUserId, getAuthMeData}),
     withRouter,
-    // withAuthRedirect,
+    withAuthRedirect,
 )(ProfileContainer);

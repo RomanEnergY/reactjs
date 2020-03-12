@@ -18,7 +18,7 @@ const initialState = {
         resultCode: undefined,
         messages: undefined
     },
-    isAuth: false, // флаг состояния был ли ранее запрос на сервер и получены данные
+    isAuth: false, // флаг состояния авторизации true означает, что пользователь авторизирован
     isFetching: false, // флаг текущего выполнения запроса на сервер
     isFetchingLogin: false, // флаг текущего выполнения запроса на сервер -> login
 };
@@ -29,7 +29,6 @@ export const getAuthMeData = () => {
         dispatch(setFetching(true));
         api1.auth.isAuthMe()
             .then(response => {
-                debugger
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
                 if (response.resultCode === 0)
@@ -45,11 +44,25 @@ export const authorizeOnService = (email, password, rememberMe) => {
         dispatch(setFetchingLogin(true));
         api1.auth.authorizeOnService(email, password, rememberMe)
             .then(response => {
-                debugger
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
                 if (response.resultCode === 0) {
+                    dispatch(setAuthUserData(undefined, undefined, undefined));
                     dispatch(getAuthMeData());
+                }
+
+                dispatch(setFetchingLogin(false));
+            });
+    };
+};
+
+export const logout = () => {
+    return (dispatch) => {
+        dispatch(setFetchingLogin(true));
+        api1.auth.logout()
+            .then(response => {
+                if (response.resultCode === 0) {
+                    dispatch(setAuthUserData(undefined, undefined, undefined));
                 }
 
                 dispatch(setFetchingLogin(false));
@@ -66,8 +79,7 @@ export const authReducer = (state = initialState, action) => {
                     ...state.data,
                     resultCode: action.resultCode,
                     messages: [...action.messages],
-                },
-                isAuth: true
+                }
             };
 
         case SET_USER_DATA:
@@ -78,7 +90,8 @@ export const authReducer = (state = initialState, action) => {
                     id: action.id,
                     login: action.login,
                     email: action.email
-                }
+                },
+                isAuth: true
             };
 
         case SET_FETCHING_AUTH_DATA:
