@@ -3,7 +3,7 @@ import s from './Dialogs.module.css';
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import {Field, reduxForm} from "redux-form";
-import {Element} from "../common/FormsComntrols/FormsControls";
+import {TextArea} from "../common/FormsComntrols/FormsControls";
 import {maxLengthCreator} from "../../utils/validators/validator";
 
 const Dialogs = (props) => {
@@ -28,7 +28,7 @@ const Dialogs = (props) => {
 };
 
 const maxLength20 = maxLengthCreator(20);
-const TextArea = Element("textarea");
+
 const DialogForm = (props) => {
     return (
         <div>

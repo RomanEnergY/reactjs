@@ -1,33 +1,32 @@
 import React from 'react';
 import {Field, reduxForm} from "redux-form";
-import {Element} from "../common/FormsComntrols/FormsControls";
 import {maxLengthCreator, required} from "../../utils/validators/validator";
 import {connect} from "react-redux";
-import {authorizeOnService, getAuthMeData} from "../../redux/AuthReducer";
+import {authorizeOnService} from "../../redux/AuthReducer";
 import {Redirect} from "react-router-dom";
+import {Input} from "../common/FormsComntrols/FormsControls";
+import Preloader from "../common/preloader/Preloader";
 
 class LoginContainer extends React.Component {
-    componentDidMount() {
-    }
-
     handleSubmit = (formData) => {
         this.props.authorizeOnService(formData.email, formData.password, formData.rememberMe);
     };
 
     render() {
-        return (
-            <>
+        if (this.props.isFetching)
+            return <Preloader/>;
+
+        if (this.props.isAuth)
+            return <Redirect to={`/profile/${this.props.id}`}/>;
+        else
+            return <div>
                 <h1>Войти на сайт</h1>
-                {this.props.id && this.props.login
-                    ? <Redirect to={`/profile/${this.props.id}`}/>
-                    : <LoginReduxForm onSubmit={this.handleSubmit}/>}
-            </>
-        )
+                <LoginReduxForm onSubmit={this.handleSubmit}/>
+            </div>
     }
 };
 
 const maxLength20 = maxLengthCreator(20);
-const Input = Element('input');
 
 const LoginForm = (props) => {
     return (
@@ -68,9 +67,9 @@ const LoginReduxForm = reduxForm({form: 'login'})(LoginForm);
 const mapStateToProps = (state) => {
     return {
         id: state.auth.data.id,
-        login: state.auth.data.login,
+        isAuth: state.auth.isAuth,
         isFetching: state.auth.isFetching
     }
 };
 
-export default connect(mapStateToProps, {getAuthMeData, authorizeOnService})(LoginContainer);
+export default connect(mapStateToProps, {authorizeOnService})(LoginContainer);

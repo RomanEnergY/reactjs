@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import {getAuthMeData} from "../redux/AuthReducer";
+import Preloader from "./common/preloader/Preloader";
 
 /**
  * Контейнер осуществляет запрос на сервер залогинен ли пользователь:
@@ -15,9 +16,13 @@ class IndexContainer extends React.Component {
     }
 
     render() {
-        return !this.props.id && !this.props.login
-            ? <Redirect to='/login'/>
-            : <Redirect to={`/profile/${this.props.id}`}/>
+        if (this.props.isFetching)
+            return <Preloader/>;
+
+        if (!this.props.isAuth)
+            return <Redirect to='/login'/>;
+        else
+            return <Redirect to={`/profile/${this.props.id}`}/>
 
     }
 }
@@ -25,7 +30,7 @@ class IndexContainer extends React.Component {
 const mapStateToProps = (state) => {
     return {
         id: state.auth.data.id,
-        login: state.auth.data.login,
+        isAuth: state.auth.isAuth,
         isFetching: state.auth.isFetching
     }
 };

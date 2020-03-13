@@ -5,8 +5,7 @@ import {getAuthMeData} from "../redux/AuthReducer";
 import Preloader from "../components/common/preloader/Preloader";
 
 const mapStateToPropsForRedirect = (state) => ({
-    id: state.auth.data.id,
-    login: state.auth.data.login,
+    isAuth: state.auth.isAuth,
     isFetching: state.auth.isFetching
 });
 
@@ -18,11 +17,13 @@ export const withAuthRedirect = (Component) => {
         }
 
         render() {
-            return this.props.isFetching
-                ? <Preloader/>
-                : !this.props.id && !this.props.login
-                    ? <Redirect to='/login'/>
-                    : <Component {...this.props}/>
+            if (this.props.isFetching)
+                return <Preloader/>;
+
+            if (!this.props.isAuth)
+                return <Redirect to='/login'/>;
+            else
+                return <Component {...this.props}/>
         }
     }
 

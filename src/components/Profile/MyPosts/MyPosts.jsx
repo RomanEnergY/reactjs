@@ -3,7 +3,7 @@ import s from './MyPosts.module.css';
 import Post from './Post/Post';
 import {Field, reduxForm} from "redux-form";
 import {maxLengthCreator, required} from "../../../utils/validators/validator";
-import {Element} from "../../common/FormsComntrols/FormsControls";
+import {TextArea} from "../../common/FormsComntrols/FormsControls";
 
 const MyPosts = (props) => {
 
@@ -28,7 +28,7 @@ const MyPosts = (props) => {
 };
 
 const maxLength10 = maxLengthCreator(10);
-const TextArea = Element("textarea");
+
 const PostForm = (props) => {
     return (
         <div>
