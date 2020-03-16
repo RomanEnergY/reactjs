@@ -1,4 +1,5 @@
 import {api1} from "../api/api";
+import {stopSubmit} from "redux-form";
 
 const SET_RESULT_DATA = 'SET_RESULT_DATA';
 const SET_USER_DATA = 'SET_USER_DATA';
@@ -42,28 +43,27 @@ export const getAuthMeData = () => {
 
 export const authorizeOnService = (email, password, rememberMe) => {
     return (dispatch) => {
-        dispatch(setFetching(true));
         api1.auth.authorizeOnService(email, password, rememberMe)
             .then(response => {
-                dispatch(setAuthResultData(response.resultCode, response.messages));
-
-                if (response.resultCode === 0)
+                if (response.resultCode === 0) {
                     dispatch(getAuthMeData());
+                } else if (response.resultCode !== 0) {
+                    dispatch(stopSubmit('login', {
+                        _error: response.messages.length > 0 ? response.messages[0] : 'Some error'
+                    }));
+                }
             });
     };
 };
 
 export const logout = () => {
     return (dispatch) => {
-        dispatch(setFetching(true));
         api1.auth.logout()
             .then(response => {
                 if (response.resultCode === 0) {
                     dispatch(setAuthUserData(undefined, undefined, undefined));
                     dispatch(setLogin(false));
                 }
-
-                dispatch(setFetching(false));
             });
     };
 };

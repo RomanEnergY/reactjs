@@ -6,6 +6,7 @@ import {authorizeOnService} from "../../redux/AuthReducer";
 import {Redirect} from "react-router-dom";
 import {Input} from "../common/FormsComntrols/FormsControls";
 import Preloader from "../common/preloader/Preloader";
+import style from "../common/FormsComntrols/FormsControls.module.css";
 
 class LoginContainer extends React.Component {
     handleSubmit = (formData) => {
@@ -55,6 +56,10 @@ const LoginForm = (props) => {
                         name={'rememberMe'}/>Remember me
             </div>
             <span/>
+            {props.error && <div className={style.formError}>
+                {props.error}
+            </div>}
+
             <div>
                 <button>Login</button>
             </div>

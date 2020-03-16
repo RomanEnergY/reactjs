@@ -1,9 +1,6 @@
 import React from "react";
 import styles from './FormsControls.module.css';
 
-/*
-    Диструкторизация, рест-оператор
- */
 export const TextArea = ({input, meta, ...props}) => {
 
     const hasError = meta.touched && meta.error;
