@@ -4,11 +4,6 @@ import Header from "./Header";
 import {logout} from "../../redux/AuthReducer";
 
 class HeaderContainer extends React.Component {
-
-    componentDidMount() {
-
-    }
-
     onClickBtnExit = (e) => {
         this.props.logout();
     };

@@ -1,8 +1,8 @@
 import React from 'react';
-import {Redirect} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {getAuthMeData} from "../redux/AuthReducer";
 import Preloader from "./common/preloader/Preloader";
+import {compose} from "redux";
 
 /**
  * Контейнер осуществляет запрос на сервер залогинен ли пользователь:
@@ -11,28 +11,25 @@ import Preloader from "./common/preloader/Preloader";
  */
 class IndexContainer extends React.Component {
     componentDidMount() {
-        if (!this.props.isFetching)
-            this.props.getAuthMeData();
+        // Пример програмного перехода, для него требуется обернуть компаненту методом withRouter lib "react-router-dom"
+        if (!this.props.isFetching) {
+            this.props.history.push(`/profile/${this.props.id}`);
+        }
     }
 
     render() {
-        if (this.props.isFetching)
-            return <Preloader/>;
-
-        if (!this.props.isAuth)
-            return <Redirect to='/login'/>;
-        else
-            return <Redirect to={`/profile/${this.props.id}`}/>
-
+        return <Preloader/>;
     }
 }
 
 const mapStateToProps = (state) => {
     return {
         id: state.auth.data.id,
-        isAuth: state.auth.isAuth,
         isFetching: state.auth.isFetching
     }
 };
 
-export default connect(mapStateToProps, {getAuthMeData})(IndexContainer);
+export default compose(
+    connect(mapStateToProps, null),
+    withRouter,
+)(IndexContainer);

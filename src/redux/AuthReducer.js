@@ -27,7 +27,7 @@ const initialState = {
 export const getAuthMeData = () => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        api1.auth.isAuthMe()
+        return api1.auth.isAuthMe() // возвращаем Promise
             .then(response => {
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
@@ -37,6 +37,7 @@ export const getAuthMeData = () => {
                 }
 
                 dispatch(setFetching(false));
+                return true; // возвращаем data в колбек Promise
             });
     };
 };

@@ -4,8 +4,8 @@ import {connect} from "react-redux";
 import {setProfileUserByUserId, setStatusByUserId} from "../../redux/ProfileReducer";
 import {withRouter} from "react-router-dom";
 import Preloader from "../common/preloader/Preloader";
-import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 
 
 class ProfileContainer extends React.Component {

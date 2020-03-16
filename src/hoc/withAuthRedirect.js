@@ -1,20 +1,16 @@
 import React from 'react';
 import {Redirect} from "react-router-dom";
 import {connect} from "react-redux";
-import {getAuthMeData} from "../redux/AuthReducer";
 import Preloader from "../components/common/preloader/Preloader";
 
 const mapStateToPropsForRedirect = (state) => ({
     isAuth: state.auth.isAuth,
-    isFetching: state.auth.isFetching
+    isFetching: state.auth.isFetching,
+    // initialized: state.app.initialized
 });
 
 export const withAuthRedirect = (Component) => {
     class RedirectComponent extends React.Component {
-        componentDidMount() {
-            if (!this.props.isFetching)
-                this.props.getAuthMeData();
-        }
 
         render() {
             if (this.props.isFetching)
@@ -27,5 +23,5 @@ export const withAuthRedirect = (Component) => {
         }
     }
 
-    return connect(mapStateToPropsForRedirect, {getAuthMeData})(RedirectComponent);
+    return connect(mapStateToPropsForRedirect)(RedirectComponent);
 };
