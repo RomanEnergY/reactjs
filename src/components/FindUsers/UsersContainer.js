@@ -5,7 +5,7 @@ import Preloader from "../common/preloader/Preloader";
 import {followUser, getUsers, onPageChanged, unFollowUser} from "../../redux/UsersReducer";
 // import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
-import {getUserData, isFetching} from "../../redux/selectors/UserSelector";
+import {getUserData, isFetching, isReselectFetching} from "../../redux/selectors/UserSelector";
 
 /*
     По средством connect передаем в UsersContainer данные,
@@ -34,7 +34,7 @@ class UsersContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        isFetching: isFetching(state),
+        isFetching: isReselectFetching(state),
         usersData: getUserData(state)
     }
 };
