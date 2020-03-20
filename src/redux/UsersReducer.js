@@ -35,11 +35,14 @@ const initialState = {
 export const getUsers = (pageNumber, pageSize = pageSizeDefault) => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        api.getUsers(pageNumber, pageSize)
+        const setUserData = api.getUsers(pageNumber, pageSize)
             .then(response => {
-                dispatch(setFetching(false));
                 dispatch(setUsers(response.items, response.totalCount));
             });
+
+        setUserData.then(() => {
+            dispatch(setFetching(false));
+        })
     };
 };
 
