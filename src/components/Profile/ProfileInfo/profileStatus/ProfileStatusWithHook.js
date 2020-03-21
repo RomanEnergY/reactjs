@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {compose} from "redux";
 import {connect} from "react-redux";
 import {updateStatus} from "../../../../redux/ProfileReducer";
@@ -7,6 +7,12 @@ import PreloaderMini from "../../../common/preloader/PreloaderMini";
 const ProfileStatusWithHook = (props) => {
     let [editMode, setEditMode] = useState(false);
     let [statusText, setStatusText] = useState(props.status.data);
+
+    // После вмонтирования компоненты вызывается всегда данная функция, коллекция которых
+    // подписывается на измение состояния
+    useEffect(() => {
+        setStatusText(props.status.data)
+    }, [props.status.data]);
 
     const activateEditMode = () => {
         if (`${props.status.userId}` === `${props.authId}`) {
