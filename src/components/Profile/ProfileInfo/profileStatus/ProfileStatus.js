@@ -35,17 +35,19 @@ class ProfileStatus extends React.Component {
     };
 
     render() {
+        if (this.props.status.fetching)
+            return <PreloaderMini/>;
+
+
         return <div>
             <span onDoubleClick={this.activateEditMode}>status:
-                {this.props.status.fetching
-                    ? <PreloaderMini/>
-                    : !this.state.editMode
-                        ? <span onDoubleClick={this.activateEditMode}>{` ${this.props.status.data || '---'}`}</span>
-                        : <input
-                            autoFocus={true} // Вставка фокуса в компонент
-                            onChange={this.onChangeStatus}
-                            onBlur={this.deActivateEditMode}
-                            value={this.state.statusText}/>
+                {!this.state.editMode
+                    ? <span onDoubleClick={this.activateEditMode}>{` ${this.props.status.data || '---'}`}</span>
+                    : <input
+                        autoFocus={true} // Вставка фокуса в компонент
+                        onChange={this.onChangeStatus}
+                        onBlur={this.deActivateEditMode}
+                        value={this.state.statusText}/>
                 }
             </span>
         </div>
