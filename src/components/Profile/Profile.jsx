@@ -3,7 +3,7 @@ import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
 import user_png_loc from "../../assets/images/user1.png";
 
-const Profile = (props) => {
+const Profile = React.memo((props) => {
     return (
         <div>
             <ProfileInfo photo={props.data.photos.large ? props.data.photos.large : user_png_loc}
@@ -11,6 +11,6 @@ const Profile = (props) => {
             <MyPostsContainer/>
         </div>
     )
-};
+});
 
 export default Profile;
