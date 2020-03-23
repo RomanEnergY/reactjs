@@ -14,8 +14,8 @@ class MyPostsContainer extends React.PureComponent {
     };
 
     render() {
-        let postsElements = this.props.posts.map(p =>
-            <Post key={p.id} message={p.message} likesCount={p.likesCount}/>);
+        let postsElements = [...this.props.posts].reverse().map(p =>
+            <Post key={p.id} message={`id=${p.id}: ${p.message}`} likesCount={p.likesCount}/>);
 
         return (
             <div className={s.postsBlock}>

@@ -90,12 +90,12 @@ export const profileReducer = (state = initialState, action) => {
                 return {
                     ...state,
                     posts: [
+                        ...state.posts,
                         {
                             id: state.posts.length + 1,
                             message: action.message,
                             likesCount: 0
-                        },
-                        ...state.posts
+                        }
                     ]
                 };
             }

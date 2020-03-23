@@ -3,7 +3,6 @@ import s from './ProfileInfo.module.css';
 import ProfileStatusWithHook from "./profileStatus/ProfileStatusWithHook";
 
 const ProfileInfo = (props) => {
-    console.log('ProfileInfo = (props)');
     return (
         <div>
             <div>
