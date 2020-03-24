@@ -3,17 +3,15 @@ import {api} from "../api/api";
 const NAME_REDUCER = 'usersReducer/';
 const SET_USERS = NAME_REDUCER + 'SET_USERS';
 const FOLLOW = NAME_REDUCER + 'FOLLOW';
-const UN_FOLLOW = NAME_REDUCER + 'UN_FOLLOW';
 const SET_CURRENT_PAGE = NAME_REDUCER + 'SET_CURRENT_PAGE';
-const SET_FETCHING_USER = NAME_REDUCER + 'SET_FETCHING_USER';
+const SET_FETCHING = NAME_REDUCER + 'SET_FETCHING';
 const SET_FOLLOWING_IN_PROGRESS = NAME_REDUCER + 'SET_FOLLOWING_IN_PROGRESS';
 
-const follow = (userId) => ({type: FOLLOW, userId});
-const unFollow = (userId) => ({type: UN_FOLLOW, userId});
+const follow = (userId, followed) => ({type: FOLLOW, userId, followed});
 const setUsers = (users, totalUserCount) => ({type: SET_USERS, users, totalUserCount});
 const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage});
-const setFetching = (fetching) => ({type: SET_FETCHING_USER, fetching});
-const setFollowingInProgress = (isFetching, userId) => ({type: SET_FOLLOWING_IN_PROGRESS, isFetching, userId});
+const setFetching = (fetching) => ({type: SET_FETCHING, fetching});
+const setFollowingInProgress = (isProgress, userId) => ({type: SET_FOLLOWING_IN_PROGRESS, isProgress, userId});
 
 const pageSizeDefault = 24;
 
@@ -23,7 +21,7 @@ const initialState = {
     currentPage: 1,
     totalUserCount: 0,
     isFetching: false, // флаг получения данных
-    followingInProgress: []
+    followingInProgress: [] // Массив userId реализации подписки/отписки потльзователя
 };
 
 /**
@@ -54,32 +52,32 @@ export const onPageChanged = (pageNumber, pageSize = pageSizeDefault) => {
     }
 };
 
-export const followUser = (userId) => {
+export const followUserMain = (userId, method, followed) => {
     return (dispatch) => {
         dispatch(setFollowingInProgress(true, userId));
-        api.follow(userId)
+        method(userId)
             .then(response => {
-                dispatch(follow(userId));
+                dispatch(follow(userId, followed));
                 dispatch(setFollowingInProgress(false, userId));
             });
     };
 };
 
+export const followUser = (userId) => {
+    return (dispatch) => {
+        dispatch(followUserMain(userId, api.follow, true));
+    };
+};
+
 export const unFollowUser = (userId) => {
     return (dispatch) => {
-        dispatch(setFollowingInProgress(true, userId));
-        api.unFollow(userId)
-            .then(response => {
-                dispatch(unFollow(userId));
-                dispatch(setFollowingInProgress(false, userId));
-            });
+        dispatch(followUserMain(userId, api.unFollow, false));
     };
 };
 
 export const usersReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_USERS:
-            // return {...state, users: [...state.users, ...action.users]}; // Поверхностная копия, в users поверхностно скопировать users и добавить users из action, добавляем в конец массива
             return {
                 ...state,
                 users: action.users,
@@ -88,27 +86,13 @@ export const usersReducer = (state = initialState, action) => {
         case FOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => {
-                    if (action.userId === u.id)
+                users: state.users.map(user => {
+                    if (action.userId === user.id)
                         return {
-                            ...u,
-                            followed: true
+                            ...user,
+                            followed: action.followed
                         };
-
-                    return u;
-                }),
-            };
-        case UN_FOLLOW:
-            return {
-                ...state,
-                users: state.users.map(u => {
-                    if (action.userId === u.id)
-                        return {
-                            ...u,
-                            followed: false
-                        };
-
-                    return u;
+                    return user;
                 }),
             };
         case SET_CURRENT_PAGE:
@@ -116,7 +100,7 @@ export const usersReducer = (state = initialState, action) => {
                 ...state,
                 currentPage: action.currentPage
             };
-        case SET_FETCHING_USER:
+        case SET_FETCHING:
             return {
                 ...state,
                 isFetching: action.fetching
@@ -124,9 +108,9 @@ export const usersReducer = (state = initialState, action) => {
         case SET_FOLLOWING_IN_PROGRESS:
             return {
                 ...state,
-                followingInProgress: action.isFetching /* если осуществляем запрос*/
+                followingInProgress: action.isProgress /* если осуществляем запрос*/
                     ? [...state.followingInProgress, action.userId] /* добавляем id пользователя */
-                    : state.followingInProgress.filter(id => id !== action.userId) /* удаляем id пользователя если id === action.userId (метод filter return Object[] */
+                    : state.followingInProgress.filter(id => id !== action.userId) /* delete id пользователя если id === action.userId (метод filter return Object[] */
             };
         default:
             return state;
