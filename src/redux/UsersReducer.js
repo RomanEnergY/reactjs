@@ -1,11 +1,12 @@
 import {api} from "../api/api";
 
-const SET_USERS = 'SET_USERS';
-const FOLLOW = 'FOLLOW';
-const UN_FOLLOW = 'UN_FOLLOW';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-const SET_FETCHING_USER = 'SET_FETCHING_USER';
-const SET_FOLLOWING_IN_PROGRESS = 'SET_FOLLOWING_IN_PROGRESS';
+const NAME_REDUCER = 'usersReducer/';
+const SET_USERS = NAME_REDUCER + 'SET_USERS';
+const FOLLOW = NAME_REDUCER + 'FOLLOW';
+const UN_FOLLOW = NAME_REDUCER + 'UN_FOLLOW';
+const SET_CURRENT_PAGE = NAME_REDUCER + 'SET_CURRENT_PAGE';
+const SET_FETCHING_USER = NAME_REDUCER + 'SET_FETCHING_USER';
+const SET_FOLLOWING_IN_PROGRESS = NAME_REDUCER + 'SET_FOLLOWING_IN_PROGRESS';
 
 const follow = (userId) => ({type: FOLLOW, userId});
 const unFollow = (userId) => ({type: UN_FOLLOW, userId});

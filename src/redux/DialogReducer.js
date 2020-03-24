@@ -1,4 +1,5 @@
-const ADD_MESSAGE = 'ADD-MESSAGE';
+const NAME_REDUCER = 'dialogReducer/';
+const ADD_MESSAGE = NAME_REDUCER + 'ADD-MESSAGE';
 
 const addMessageAction = (message) => ({type: ADD_MESSAGE, message});
 

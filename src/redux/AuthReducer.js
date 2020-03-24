@@ -1,10 +1,11 @@
 import {api1} from "../api/api";
 import {stopSubmit} from "redux-form";
 
-const SET_RESULT_DATA = 'SET_RESULT_DATA';
-const SET_USER_DATA = 'SET_USER_DATA';
-const SET_FETCHING_AUTH_DATA = 'SET_FETCHING_AUTH_DATA';
-const SET_LOGIN = 'SET_LOGIN';
+const NAME_REDUCER = 'authReducer/';
+const SET_RESULT_DATA = NAME_REDUCER + 'SET_RESULT_DATA';
+const SET_USER_DATA = NAME_REDUCER + 'SET_USER_DATA';
+const SET_FETCHING_AUTH_DATA = NAME_REDUCER + 'SET_FETCHING_AUTH_DATA';
+const SET_LOGIN = NAME_REDUCER + 'SET_LOGIN';
 
 const setAuthResultData = (resultCode, messages) => ({type: SET_RESULT_DATA, resultCode, messages});
 const setAuthUserData = (id, login, email, messages) => ({type: SET_USER_DATA, id, login, email, messages});

@@ -1,6 +1,7 @@
 import {getAuthMeData} from "./AuthReducer";
 
-const INITIALIZE_SUCCESS = 'INITIALIZE_SUCCESS';
+const NAME_REDUCER = 'appReducer/';
+const INITIALIZE_SUCCESS = NAME_REDUCER + 'INITIALIZE_SUCCESS';
 
 const initializedSuccess = () => ({type: INITIALIZE_SUCCESS});
 
