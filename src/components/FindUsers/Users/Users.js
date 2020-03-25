@@ -1,64 +1,39 @@
 import React from 'react';
-import s from './Users.module.css';
+import style from './Users.module.css';
 import user_png_loc from "../../../assets/images/user1.png";
-import {NavLink} from "react-router-dom";
-import PreloaderMini from "../../common/preloader/PreloaderMini";
+import Pagination from "./pagination/Pagination";
+import UserDescription from "./userInfo/userDescription/UserDescription";
+import NavLinkToId from "./userInfo/navLinkToId/NavLinkToId";
+import ButtonFollow from "./userInfo/followBut/ButtonFollow";
 
 const Users = (props) => {
-    let pages = [];
-    for (let i = 1; i <= Math.ceil(props.totalUserCount / props.pageSize); i++)
-        pages.push(i);
+    const users = props.users.map(user => {
+            return (
+                <div key={user.id}>
+                    <NavLinkToId navLink={`/profile/${user.id}`}
+                                 photosUser={!user.photos.small ? user_png_loc : user.photos.small}/>
 
-    const btnPages = pages.map(pageNumber => {
-        return <button key={pageNumber}
-                       className={props.currentPage === pageNumber ? s.selectedPage : ''}
-                       onClick={(e) => props.onPageChanged(pageNumber)}>{pageNumber}</button>
-    });
+                    <ButtonFollow followingInProgress={props.followingInProgress}
+                                  followUser={props.followUser}
+                                  unFollowUser={props.unFollowUser}
+                                  followId={user.id}
+                                  followed={user.followed}/>
 
-    const users = props.users.map(u => {
-        const followingInProgress = props.followingInProgress.some(id => id === u.id); // если в массиве есть пользователей есть данным id (return true), значит по данному id получаем ответ
-        const followBut = followingInProgress
-            ? <PreloaderMini/>
-            : u.followed
-                ? <button className={s.follow} onClick={() => props.unFollowUser(u.id)}>UnFollowed</button> // отписаться
-                : <button className={s.unFollow} onClick={() => props.followUser(u.id)}>Followed</button>; // подписаться
-
-        const photosUser = u.photos.small === null ? user_png_loc : u.photos.small;
-
-        return (
-            <div key={u.id}>
-
-                <span>
-                    <div>
-                        <NavLink to={`/profile/${u.id}`}>
-                            <img className={s.userPhoto} src={photosUser} alt={photosUser}/>
-                        </NavLink>
-                    </div>
-                    <div>
-                        {followBut}
-                    </div>
-                </span>
-                <span>
-                    <span>
-                        <div>{`id=${u.id}`}</div>
-                        <div>{`name=${u.name}`}</div>
-                        <div>{`uniqueUrlName=${u.uniqueUrlName}`}</div>
-                        <div>{`status=${u.status}`}</div>
-                        <div>{`followed=${u.followed}`}</div>
-                    </span>
-                </span>
-
-            </div>
-        )
-    });
+                    <UserDescription {...user} />
+                </div>
+            )
+        }
+    );
 
     return (
-        <div className={s.dialogs}>
-            <div className={s.messages}>
-                <div>
-                    {btnPages}
-                </div>
-                <div className={s.wrapper}>
+        <div className={style.dialogs}>
+            <div className={style.messages}>
+                <Pagination totalUserCount={props.totalUserCount}
+                            pageSize={props.pageSize}
+                            currentPage={props.currentPage}
+                            onPageChanged={props.onPageChanged}/>
+
+                <div className={style.wrapper}>
                     {users}
                 </div>
             </div>

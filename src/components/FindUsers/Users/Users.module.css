@@ -1,21 +1,4 @@
-.userPhoto {
-    width: 80px;
-}
-
-.selectedPage {
-    font-weight: bold;
-    background-color: red;
-}
-
 .wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-}
-
-.follow {
-    background-color: #8987ff;
-}
-
-.unFollow {
-    background-color: #ffe3cc;
 }
