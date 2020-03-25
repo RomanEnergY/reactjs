@@ -36,7 +36,8 @@ const mapStateToProps = (state) => {
         pageSize: getReselectPageSize(state),
         currentPage: getReselectCurrentPage(state),
         totalUserCount: getReselectTotalUserCount(state),
-        followingInProgress: getReselectFollowingInProgress(state)
+        followingInProgress: getReselectFollowingInProgress(state),
+        isAuth: state.auth.isAuth
     }
 };
 

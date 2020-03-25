@@ -13,13 +13,13 @@ const Users = (props) => {
                     <NavLinkToId navLink={`/profile/${user.id}`}
                                  photosUser={!user.photos.small ? user_png_loc : user.photos.small}/>
 
-                    <ButtonFollow followingInProgress={props.followingInProgress}
-                                  followUser={props.followUser}
-                                  unFollowUser={props.unFollowUser}
-                                  followId={user.id}
-                                  followed={user.followed}/>
+                    {props.isAuth && <ButtonFollow followingInProgress={props.followingInProgress}
+                                                   followUser={props.followUser}
+                                                   unFollowUser={props.unFollowUser}
+                                                   followId={user.id}
+                                                   followed={user.followed}/>}
 
-                    <UserDescription {...user} />
+                    <UserDescription isAuth={props.isAuth} {...user} />
                 </div>
             )
         }
