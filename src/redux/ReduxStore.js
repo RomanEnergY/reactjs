@@ -1,4 +1,4 @@
-import {applyMiddleware, combineReducers, createStore} from "redux";
+import {applyMiddleware, combineReducers, compose, createStore} from "redux";
 import {dialogReducer} from "./DialogReducer";
 import {profileReducer} from "./ProfileReducer";
 import {usersReducer} from "./UsersReducer";
@@ -16,8 +16,11 @@ let reducers = combineReducers({
     form: formReducer
 });
 
-const store = createStore(reducers, applyMiddleware(thunkMiddleware)); // applyMiddleware(thunkMiddleware) - внедрение возможности в Reducer вызывать dispatch
-
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+    reducers,
+    composeEnhancers(applyMiddleware(thunkMiddleware))
+);
 export default store;
 
 window.store = store;

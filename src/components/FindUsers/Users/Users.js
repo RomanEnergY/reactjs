@@ -1,10 +1,10 @@
 import React from 'react';
 import style from './Users.module.css';
 import user_png_loc from "../../../assets/images/user1.png";
-import Pagination from "./pagination/Pagination";
 import UserDescription from "./userInfo/userDescription/UserDescription";
 import NavLinkToId from "./userInfo/navLinkToId/NavLinkToId";
 import ButtonFollow from "./userInfo/followBut/ButtonFollow";
+import PaginationItems from "./paginationItems/PaginationItems";
 
 const Users = (props) => {
     const users = props.users.map(user => {
@@ -28,10 +28,10 @@ const Users = (props) => {
     return (
         <div className={style.dialogs}>
             <div className={style.messages}>
-                <Pagination totalUserCount={props.totalUserCount}
-                            pageSize={props.pageSize}
-                            currentPage={props.currentPage}
-                            onPageChanged={props.onPageChanged}/>
+                <PaginationItems totalItemsCount={props.totalUserCount}
+                                 pageSize={props.pageSize}
+                                 currentPage={props.currentPage}
+                                 onPageChanged={props.onPageChanged}/>
 
                 <div className={style.wrapper}>
                     {users}
