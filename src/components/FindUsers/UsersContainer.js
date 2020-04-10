@@ -11,6 +11,7 @@ import {
     getReselectUsers,
     isReselectFetching
 } from "../../redux/selectors/UserSelector";
+import PaginationItems from "./Users/paginationItems/PaginationItems";
 
 class UsersContainer extends React.Component {
     componentDidMount() {
@@ -18,14 +19,19 @@ class UsersContainer extends React.Component {
     }
 
     render() {
-        if (this.props.isFetching)
-            return <Preloader/>;
-
-        return <Users {...this.props}
-                      onPageChanged={this.props.onPageChanged}
-                      followUser={this.props.followUser}
-                      unFollowUser={this.props.unFollowUser}
-        />
+        return <>
+            <PaginationItems totalItemsCount={this.props.totalUserCount}
+                             pageSize={this.props.pageSize}
+                             currentPage={this.props.currentPage}
+                             onPageChanged={this.props.onPageChanged}/>
+            {this.props.isFetching
+                ? <Preloader/>
+                : <Users {...this.props}
+                         onPageChanged={this.props.onPageChanged}
+                         followUser={this.props.followUser}
+                         unFollowUser={this.props.unFollowUser}
+                />}
+        </>
     }
 }
 
