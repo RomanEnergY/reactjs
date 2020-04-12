@@ -1,4 +1,4 @@
-import {api1} from "../api/api";
+import {api} from "../api/api";
 
 const NAME_REDUCER = 'profileReducer/';
 const ADD_POST = NAME_REDUCER + 'ADD-POST';
@@ -44,7 +44,7 @@ export const addNewPost = (message) => {
 export const setProfileUserByUserId = (userId) => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        api1.profile.getProfileUserByUserId(userId)
+        api.profile.getProfileUserByUserId(userId)
             .then(response => {
                 dispatch(setUserProfile(response.data));
                 dispatch(setFetching(false));
@@ -65,7 +65,7 @@ export const setProfileUserByUserId = (userId) => {
 export const setStatusByUserId = (userId) => {
     return (dispatch) => {
         dispatch(setStatusFetching(true));
-        api1.profile.getStatusByUserId(userId)
+        api.profile.getStatusByUserId(userId)
             .then(response => {
                 dispatch(setStatusData(userId, response.data));
                 dispatch(setStatusFetching(false));
@@ -76,7 +76,7 @@ export const setStatusByUserId = (userId) => {
 export const updateStatus = (newStatus) => {
     return (dispatch) => {
         dispatch(setStatusFetching(true));
-        api1.profile.updateStatus(newStatus)
+        api.profile.updateStatus(newStatus)
             .then(response => {
                 dispatch(updateMyStatus(newStatus));
                 dispatch(setStatusFetching(false));

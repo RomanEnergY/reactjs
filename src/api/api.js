@@ -9,7 +9,7 @@ const instance = axios.create({
     }
 });
 
-export const api1 = {
+export const api = {
     profile: {
         /**
          /**
@@ -74,39 +74,34 @@ export const api1 = {
                 })
         }
 
-    }
-};
-
-
-export const api = {
-    /**
-     * Получение данных о пользователях
-     * @param currentPage
-     * @param pageSize
-     * @returns {Q.Promise<any> | * | void | PromiseLike<any>}
-     */
-    getUsers(currentPage = 1, pageSize = 10) {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}`)
-            .then(response => {
-                return response.data;
-            });
     },
 
-    unFollow(id) {
-        return instance.delete(`follow/${id}`)
-            .then(response => {
-                if (response.data.resultCode === 0) {
+    users: {
+        getUsers(currentPage = 1, pageSize = 10) {
+            return instance.get(`users?page=${currentPage}&count=${pageSize}`)
+                .then(response => {
                     return response.data;
-                }
-            });
+                });
+        }
     },
 
-    follow(id) {
-        return instance.post(`follow/${id}`)
-            .then(response => {
-                if (response.data.resultCode === 0) {
-                    return response.data;
-                }
-            });
-    }
+    follow: {
+        unFollow(id) {
+            return instance.delete(`follow/${id}`)
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        return response.data;
+                    }
+                });
+        },
+
+        follow(id) {
+            return instance.post(`follow/${id}`)
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        return response.data;
+                    }
+                });
+        }
+    },
 };

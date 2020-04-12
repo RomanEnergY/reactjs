@@ -1,4 +1,4 @@
-import {api1} from "../api/api";
+import {api} from "../api/api";
 import {stopSubmit} from "redux-form";
 
 const NAME_REDUCER = 'authReducer/';
@@ -28,7 +28,7 @@ const initialState = {
 export const getAuthMeData = () => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        return api1.auth.isAuthMe() // возвращаем Promise
+        return api.auth.isAuthMe() // возвращаем Promise
             .then(response => {
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
@@ -45,7 +45,7 @@ export const getAuthMeData = () => {
 
 export const authorizeOnService = (email, password, rememberMe) => {
     return (dispatch) => {
-        api1.auth.authorizeOnService(email, password, rememberMe)
+        api.auth.authorizeOnService(email, password, rememberMe)
             .then(response => {
                 if (response.resultCode === 0) {
                     dispatch(getAuthMeData());
@@ -60,7 +60,7 @@ export const authorizeOnService = (email, password, rememberMe) => {
 
 export const logout = () => {
     return (dispatch) => {
-        api1.auth.logout()
+        api.auth.logout()
             .then(response => {
                 if (response.resultCode === 0) {
                     dispatch(setAuthUserData(undefined, undefined, undefined));
