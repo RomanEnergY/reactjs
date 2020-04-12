@@ -45,8 +45,10 @@ export const getAuthMeData = () => {
 
 export const authorizeOnService = (email, password, rememberMe) => {
     return (dispatch) => {
+        dispatch(setFetching(true));
         api.auth.authorizeOnService(email, password, rememberMe)
             .then(response => {
+                dispatch(setFetching(false));
                 if (response.resultCode === 0) {
                     dispatch(getAuthMeData());
                 } else if (response.resultCode !== 0) {
