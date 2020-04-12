@@ -1,13 +1,17 @@
 import React from 'react';
-import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
-import user_png_loc from "../../assets/images/user1.png";
+import ProfileImg from "./ProfileInfo/ProfileImg";
+import ProfileUserName from "./ProfileInfo/ProfileUserName";
+import ProfileStatusWithHook from "./ProfileInfo/profileStatus/ProfileStatusWithHook";
+import ProfileStatusDataWithHook from "./ProfileInfo/profileStatus/ProfileStatusDataWithHook";
 
 const Profile = React.memo((props) => {
     return (
         <div>
-            <ProfileInfo photo={props.data.photos.large ? props.data.photos.large : user_png_loc}
-                         fullName={props.data.fullName}/>
+            <ProfileImg photo={props.status.data.photos.large}/>
+            <ProfileUserName fullName={props.status.data.fullName}/>
+            <ProfileStatusWithHook status={props.status} authId={props.authId} updateStatus={props.updateStatus}/>
+            <ProfileStatusDataWithHook {...props}/>
             <MyPostsContainer/>
         </div>
     )

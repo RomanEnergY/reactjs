@@ -32,7 +32,7 @@ export const api = {
          * @param userId
          * @returns {Q.Promise<any> | * | void | PromiseLike<any>}
          */
-        getStatusByUserId(userId) {
+        getTextStatusByUserId(userId) {
             return instance.get(`profile/status/${userId}`)
                 .then(response => {
                     return response;

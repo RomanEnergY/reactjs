@@ -4,17 +4,13 @@ const NAME_REDUCER = 'profileReducer/';
 const ADD_POST = NAME_REDUCER + 'ADD-POST';
 const SET_USER_PROFILE = NAME_REDUCER + 'SET_USER_PROFILE';
 const SET_STATUS_DATA = NAME_REDUCER + 'SET_STATUS_DATA';
-const UPDATE_STATUS = NAME_REDUCER + 'UPDATE_STATUS';
 const SET_STATUS_FETCHING = NAME_REDUCER + 'SET_STATUS_FETCHING';
-const SET_FETCHING = NAME_REDUCER + 'SET_FETCHING';
 const SET_FETCHING_POST = NAME_REDUCER + 'SET_FETCHING_POST';
 
 const addPost = (message) => ({type: ADD_POST, message});
 const setUserProfile = (data) => ({type: SET_USER_PROFILE, data});
-const setStatusData = (userId, data) => ({type: SET_STATUS_DATA, userId, data});
-const updateMyStatus = (data) => ({type: UPDATE_STATUS, data});
+const setStatusData = (data) => ({type: SET_STATUS_DATA, textStatus: data});
 const setStatusFetching = (fetching) => ({type: SET_STATUS_FETCHING, fetching});
-const setFetching = (fetching) => ({type: SET_FETCHING, fetching});
 const setFetchingPost = (fetchingPost) => ({type: SET_FETCHING_POST, fetchingPost});
 
 const initialState = {
@@ -24,13 +20,31 @@ const initialState = {
     ],
     fetchingPost: false,
     newPostText: '',
-    data: '',
     status: {
-        userId: '',
-        data: '',
+        textStatus: null,
+        data: {
+            aboutMe: null,
+            contacts: {
+                facebook: null,
+                website: null,
+                vk: null,
+                twitter: null,
+                instagram: null,
+                youtube: null,
+                github: null,
+                mainLink: null
+            },
+            lookingForAJob: false,
+            lookingForAJobDescription: null,
+            fullName: null,
+            userId: null,
+            photos: {
+                small: null,
+                large: null
+            }
+        },
         fetching: false
-    },
-    fetching: false
+    }
 };
 
 export const addNewPost = (message) => {
@@ -43,11 +57,11 @@ export const addNewPost = (message) => {
 
 export const setProfileUserByUserId = (userId) => {
     return (dispatch) => {
-        dispatch(setFetching(true));
+        dispatch(setStatusFetching(true));
         api.profile.getProfileUserByUserId(userId)
             .then(response => {
                 dispatch(setUserProfile(response.data));
-                dispatch(setFetching(false));
+                dispatch(setStatusFetching(false));
             });
     }
 };
@@ -65,9 +79,9 @@ export const setProfileUserByUserId = (userId) => {
 export const setStatusByUserId = (userId) => {
     return (dispatch) => {
         dispatch(setStatusFetching(true));
-        api.profile.getStatusByUserId(userId)
+        api.profile.getTextStatusByUserId(userId)
             .then(response => {
-                dispatch(setStatusData(userId, response.data));
+                dispatch(setStatusData(response.data));
                 dispatch(setStatusFetching(false));
             });
     }
@@ -78,7 +92,7 @@ export const updateStatus = (newStatus) => {
         dispatch(setStatusFetching(true));
         api.profile.updateStatus(newStatus)
             .then(response => {
-                dispatch(updateMyStatus(newStatus));
+                dispatch(setStatusData(newStatus));
                 dispatch(setStatusFetching(false));
             });
     }
@@ -91,8 +105,7 @@ export const profileReducer = (state = initialState, action) => {
                 return {
                     ...state,
                     posts: [
-                        ...state.posts,
-                        {
+                        ...state.posts, {
                             id: state.posts.length + 1,
                             message: action.message,
                             likesCount: 0
@@ -105,7 +118,10 @@ export const profileReducer = (state = initialState, action) => {
         case SET_USER_PROFILE:
             return {
                 ...state,
-                data: action.data
+                status: {
+                    ...state.status,
+                    data: action.data
+                }
             };
 
         case SET_STATUS_DATA:
@@ -113,17 +129,7 @@ export const profileReducer = (state = initialState, action) => {
                 ...state,
                 status: {
                     ...state.status,
-                    data: action.data,
-                    userId: action.userId
-                }
-            };
-
-        case UPDATE_STATUS:
-            return {
-                ...state,
-                status: {
-                    ...state.status,
-                    data: action.data
+                    textStatus: action.textStatus
                 }
             };
 
@@ -134,12 +140,6 @@ export const profileReducer = (state = initialState, action) => {
                     ...state.status,
                     fetching: action.fetching
                 }
-            };
-
-        case SET_FETCHING:
-            return {
-                ...state,
-                fetching: action.fetching
             };
 
         case SET_FETCHING_POST:
