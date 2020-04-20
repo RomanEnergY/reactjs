@@ -1,4 +1,5 @@
 import {api} from "../api/api";
+import {stopSubmit} from "redux-form";
 
 const NAME_REDUCER = 'profileReducer/';
 const ADD_POST = NAME_REDUCER + 'ADD-POST';
@@ -6,12 +7,14 @@ const SET_USER_PROFILE = NAME_REDUCER + 'SET_USER_PROFILE';
 const SET_STATUS_DATA = NAME_REDUCER + 'SET_STATUS_DATA';
 const SET_STATUS_FETCHING = NAME_REDUCER + 'SET_STATUS_FETCHING';
 const SET_FETCHING_POST = NAME_REDUCER + 'SET_FETCHING_POST';
+const SET_FETCHING_DATA_STATUS = NAME_REDUCER + 'SET_FETCHING_DATA_STATUS';
 
 const addPost = (message) => ({type: ADD_POST, message});
 const setUserProfile = (data) => ({type: SET_USER_PROFILE, data});
 const setStatusData = (data) => ({type: SET_STATUS_DATA, textStatus: data});
 const setStatusFetching = (fetching) => ({type: SET_STATUS_FETCHING, fetching});
 const setFetchingPost = (fetchingPost) => ({type: SET_FETCHING_POST, fetchingPost});
+const setStatusDataFetching = (fetching) => ({type: SET_FETCHING_DATA_STATUS, fetching});
 
 const initialState = {
     posts: [
@@ -41,7 +44,8 @@ const initialState = {
             photos: {
                 small: null,
                 large: null
-            }
+            },
+            fetchingData: null
         },
         fetching: false
     }
@@ -57,11 +61,11 @@ export const addNewPost = (message) => {
 
 export const setProfileUserByUserId = (userId) => {
     return (dispatch) => {
-        dispatch(setStatusFetching(true));
+        dispatch(setStatusDataFetching(true));
         api.profile.getProfileUserByUserId(userId)
             .then(response => {
                 dispatch(setUserProfile(response.data));
-                dispatch(setStatusFetching(false));
+                dispatch(setStatusDataFetching(false));
             });
     }
 };
@@ -95,6 +99,80 @@ export const updateStatus = (newStatus) => {
                 dispatch(setStatusData(newStatus));
                 dispatch(setStatusFetching(false));
             });
+    }
+};
+
+export const setStatusDataContacts = (statusDataContacts) => {
+    return (dispatch, getState) => {
+        /**
+         * Метод проверяет наличие по шаблону значения данных и добавляет key: value в объект result
+         * Пример массива text:
+         * text = [
+         *      "The data of city (City)",
+         *      "The data of user.name (User->Name)",
+         *      "The data of user.surname (User->Surname)",
+         * }
+         *
+         * возращаемый объект
+         * returns = {
+         *     city: "The data of city ",
+         *     user: {
+         *          name: "The data of user.name ",
+         *          surname: "The data of user.surname "
+         *     }
+         * }
+         * @param text входной массив строк
+         * @returns {Object}
+         */
+        const getErrorResult = (text) => {
+            let result = {};
+            text.forEach(data => {
+                let getMatchData = (pattern) => {
+                    return data.match(new RegExp(pattern, "i"));
+                };
+
+                let pref = '->';
+                let matchUp = getMatchData(`(.+)(\\(.+)(${pref})(.+)`);
+                let match = getMatchData(`(.+)(\\(.+)(.+)`);
+
+                if (matchUp) {
+                    let nameKeyUpLevel = matchUp[2][1].toLowerCase() + matchUp[2].substring(2);
+                    let key = matchUp[4][0].toLowerCase() + matchUp[4].substring(1, matchUp[4].length - 1);
+                    let value = matchUp[1];
+
+                    result = {
+                        ...result,
+                        [nameKeyUpLevel]: {
+                            ...result[nameKeyUpLevel],
+                            [key]: value
+                        }
+                    };
+                } else {
+                    if (match) {
+                        let key = match[2][1].toLowerCase() + match[2].substring(2);
+                        let value = match[1];
+
+                        result = {
+                            ...result,
+                            [key]: value
+                        };
+                    }
+                }
+            });
+            return result;
+        };
+
+        dispatch(setUserProfile(statusDataContacts));
+        dispatch(setStatusDataFetching(true));
+        return api.profile.updateStatusDataContacts(statusDataContacts)
+            .then(response => {
+                dispatch(setProfileUserByUserId(getState().auth.data.id));
+            })
+            .catch(response => {
+                dispatch(setStatusDataFetching(false));
+                dispatch(stopSubmit("edit-profile", {...getErrorResult(response)}));
+                return Promise.reject("response: test _error"); // передача ошибки на уровень выше
+            })
     }
 };
 
@@ -146,6 +224,18 @@ export const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 fetchingPost: action.fetchingPost
+            };
+
+        case SET_FETCHING_DATA_STATUS:
+            return {
+                ...state,
+                status: {
+                    ...state.status,
+                    data: {
+                        ...state.status.data,
+                        fetchingData: action.fetching
+                    }
+                }
             };
 
         default:

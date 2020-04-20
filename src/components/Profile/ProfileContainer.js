@@ -1,11 +1,17 @@
 import React from 'react';
-import Profile from "./Profile";
+import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import {connect} from "react-redux";
-import {setProfileUserByUserId, setStatusByUserId, updateStatus} from "../../redux/ProfileReducer";
+import {
+    setProfileUserByUserId,
+    setStatusByUserId,
+    updateStatus,
+    setStatusDataContacts
+} from "../../redux/ProfileReducer";
 import {withRouter} from "react-router-dom";
 import Preloader from "../common/preloader/Preloader";
 import {compose} from "redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import MyPostsContainer from "./MyPosts/MyPostsContainer";
 
 
 class ProfileContainer extends React.Component {
@@ -34,10 +40,17 @@ class ProfileContainer extends React.Component {
         if (this.props.fetching || !this.props.status.data)
             return <Preloader/>;
 
-        return <Profile
-            status={this.props.status}
-            authId={this.props.authId}
-            updateStatus={this.props.updateStatus}/>
+        return (<>
+            <ProfileInfo
+                photo={this.props.status.data.photos.large}
+                fullName={this.props.status.data.fullName}
+                status={this.props.status}
+                authId={this.props.authId}
+                updateStatus={this.props.updateStatus}
+                updateContactForm={this.props.setStatusDataContacts}/>
+
+            <MyPostsContainer/>
+        </>)
     }
 }
 
@@ -56,6 +69,6 @@ const mapStateToProps = (state) => {
  */
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, {setProfileUserByUserId, setStatusByUserId, updateStatus}),
+    connect(mapStateToProps, {setProfileUserByUserId, setStatusByUserId, updateStatus, setStatusDataContacts}),
     withRouter,
 )(ProfileContainer);

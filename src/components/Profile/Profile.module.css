@@ -1,0 +1,34 @@
+.descriptionBlock {
+    padding-left: 10px;
+}
+
+.profilePhoto {
+    width: 150px;
+}
+
+.butEditMode{
+    font-weight: bold
+}
+
+.contact {
+    padding-left: 25px;
+}
+
+.contactKey {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.contactValue {
+    /*font-size: 17px*/
+}
+
+.formError {
+    border: solid red 3px;
+    padding: 5px;
+    color: red;
+}
+
+.contactData{
+    padding-left: 10px;
+}

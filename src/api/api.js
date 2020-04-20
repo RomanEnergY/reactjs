@@ -49,6 +49,17 @@ export const api = {
                 .then(response => {
                     return response;
                 });
+        },
+
+        updateStatusDataContacts(statusDataContacts) {
+            return instance.put(`profile`, statusDataContacts)
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        return response;
+                    } else {
+                        return Promise.reject(response.data.messages);
+                    }
+                });
         }
     },
 
