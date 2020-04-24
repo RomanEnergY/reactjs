@@ -21,3 +21,8 @@
 .inputError {
     background-color: #ffa7aa;
 }
+
+.changed {
+    border: solid #9a8fff 3px;
+    background-color: #00ff00;
+}

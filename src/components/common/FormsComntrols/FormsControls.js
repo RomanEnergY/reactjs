@@ -1,5 +1,7 @@
 import React from "react";
 import styles from './FormsControls.module.css';
+import PreloaderMini from "../preloader/PreloaderMini";
+import {connect} from "react-redux";
 
 export const TextArea = ({input, meta, ...props}) => {
 
@@ -28,16 +30,30 @@ export const Input = ({input, meta, ...props}) => {
     )
 };
 
-export const KeyToInput = ({input, meta, handlerValid, ...props}) => {
+export const KeyToInputComponent = ({input, meta, ...props}) => {
     const hasError = meta.error;
+    const changed = meta.initial !== input.value;
+    let classNameInput = hasError ? styles.inputError : changed ? styles.changed : "";
+    debugger
 
     return (
         <div className={styles.formControl + " " + (hasError ? styles.error : "")}>
             <div>
-                <b>{props.data}</b>
-                <input className={hasError ? styles.inputError : ""} {...input} {...props}/>
-                {hasError && <span className={styles.spanError}>{meta.error}</span>}
+                <b>{props.label} </b>
+                {props.fetching
+                    ? <PreloaderMini/>
+                    : <>
+                        <input className={classNameInput} {...input} {...props}/>
+                        {hasError && <span className={styles.spanError}>{meta.error}</span>}
+                    </>
+                }
             </div>
         </div>
     )
 };
+
+export const KeyToInput = connect((state) => {
+    return {
+        fetching: state.profilePage.profile.fetching
+    }
+})(KeyToInputComponent);

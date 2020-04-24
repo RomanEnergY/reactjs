@@ -2,49 +2,62 @@ import React, {useEffect, useState} from 'react';
 import ProfileContactData from "./ProfileContactData";
 import ProfileContactForm from "./ProfileContactForm";
 import style from '../Profile.module.css'
-import Preloader from "../../common/preloader/Preloader";
+import {reduxForm, stopSubmit} from "redux-form";
 
-const ProfileContactDataWithHook = ({data, authId, updateContactForm, ...props}) => {
+const nameReduxForm = {
+    form: 'edit-profile',
+    enableReinitialize: true
+};
+
+const ProfileContactDataWithHook = ({profileData, profileFetching, isAuthMe, updateContactForm, dispatchErrorSubmitData, ...props}) => {
     let [activateEditMode, setActivateEditMode] = useState(false);
     let [editMode, setEditMode] = useState(false);
+    let [dataForm, setDataForm] = useState(profileData);
+
     const buttonOnClick = () => {
         setEditMode(true);
     };
 
     useEffect(() => {
-        if (`${data.userId}` === `${authId}`) {
+        if (isAuthMe) {
             setActivateEditMode(true)
         } else
-            setActivateEditMode(false)
-    }, [data.userId, authId]);
+            setActivateEditMode(false);
 
-    let handleSubmit = (dataForm) => {
-        updateContactForm(dataForm)
+        setDataForm(profileData);
+    }, [isAuthMe, profileData, editMode]);
+
+    let handleSubmit = (dataFormSubmit) => {
+        // debugger
+        setDataForm(dataFormSubmit);
+
+        updateContactForm(dataFormSubmit)
             .then(() => {
                 setEditMode(false);
             })
-
+            .catch(error => {
+                dispatchErrorSubmitData(stopSubmit(nameReduxForm.form, {...error}));
+            })
     };
 
     const closeEdit = () => {
         setEditMode(false);
     };
 
-    if (data.fetchingData)
-        return <Preloader/>
-
     return <div className={style.contactData}>
         {editMode
-            ? <ProfileContactForm initialValues={{...data}}
-                                  onSubmit={handleSubmit}
-                                  data={data}
-                                  closeEdit={closeEdit}/>
+            ? <ProfileContactReduxForm initialValues={{...dataForm}}
+                                       onSubmit={handleSubmit}
+                                       profileFetching={profileFetching}
+                                       closeEdit={closeEdit}/>
 
             : <ProfileContactData activateEditMode={activateEditMode}
                                   buttonEditMode={buttonOnClick}
-                                  data={data}/>
+                                  data={profileData}/>
         }
     </div>
 };
+
+const ProfileContactReduxForm = reduxForm({...nameReduxForm})(ProfileContactForm);
 
 export default ProfileContactDataWithHook;

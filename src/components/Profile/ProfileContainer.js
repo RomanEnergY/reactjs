@@ -2,16 +2,18 @@ import React from 'react';
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import {connect} from "react-redux";
 import {
+    getProfileDataAuth,
     setProfileUserByUserId,
     setStatusByUserId,
-    updateStatus,
-    setStatusDataContacts
+    setStatusDataContacts,
+    updateStatus
 } from "../../redux/ProfileReducer";
 import {withRouter} from "react-router-dom";
 import Preloader from "../common/preloader/Preloader";
 import {compose} from "redux";
 import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
+import {dispatchErrorSubmitData} from "../../redux/ReduxFormReducer";
 
 
 class ProfileContainer extends React.Component {
@@ -37,17 +39,18 @@ class ProfileContainer extends React.Component {
     };
 
     render() {
-        if (this.props.fetching || !this.props.status.data)
+        if (!this.props.profile.data.userId)
             return <Preloader/>;
 
         return (<>
             <ProfileInfo
-                photo={this.props.status.data.photos.large}
-                fullName={this.props.status.data.fullName}
                 status={this.props.status}
-                authId={this.props.authId}
+                profile={this.props.profile}
+                isAuthMe={`${this.props.authId}` === `${this.props.profile.data.userId}`}
                 updateStatus={this.props.updateStatus}
-                updateContactForm={this.props.setStatusDataContacts}/>
+                updateContactForm={this.props.setStatusDataContacts}
+                dispatchErrorSubmitData={this.props.dispatchErrorSubmitData}
+            />
 
             <MyPostsContainer/>
         </>)
@@ -56,9 +59,9 @@ class ProfileContainer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        status: state.profilePage.status,
         authId: state.auth.data.id,
-        fetching: state.profilePage.fetching
+        status: state.profilePage.status,
+        profile: state.profilePage.profile
     }
 };
 
@@ -69,6 +72,13 @@ const mapStateToProps = (state) => {
  */
 export default compose(
     withAuthRedirect,
-    connect(mapStateToProps, {setProfileUserByUserId, setStatusByUserId, updateStatus, setStatusDataContacts}),
+    connect(mapStateToProps, {
+        getProfileDataAuth,
+        setProfileUserByUserId,
+        setStatusByUserId,
+        updateStatus,
+        setStatusDataContacts,
+        dispatchErrorSubmitData
+    }),
     withRouter,
 )(ProfileContainer);

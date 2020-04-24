@@ -4,20 +4,21 @@ import ProfileUserName from "./ProfileUserName";
 import ProfileStatusWithHook from "./ProfileStatusWithHook";
 import ProfileContactDataWithHook from "./ProfileContactDataWithHook";
 
-const ProfileInfo = React.memo(({photo, fullName, status, authId, updateStatus, updateContactForm}, props) => {
+const ProfileInfo = React.memo(({status, profile, isAuthMe, updateStatus, updateContactForm, dispatchErrorSubmitData}, ...props) => {
     return (
         <div>
-            <ProfileImg photo={photo}/>
-            <ProfileUserName fullName={fullName}/>
-            <ProfileStatusWithHook textStatus={status.textStatus}
-                                   fetchingStatus={status.fetching}
-                                   dataUserId={status.data.userId}
-                                   authId={authId}
+            <ProfileImg photo={profile.data.photos.small}/>
+            <ProfileUserName fullName={profile.data.fullName}/>
+            <ProfileStatusWithHook statusData={status.data}
+                                   statusFetching={status.fetching}
+                                   isAuthMe={isAuthMe}
                                    updateStatus={updateStatus}/>
 
-            <ProfileContactDataWithHook data={status.data}
-                                        authId={authId}
-                                        updateContactForm={updateContactForm}/>
+            <ProfileContactDataWithHook profileData={profile.data}
+                                        profileFetching={profile.fetching}
+                                        isAuthMe={isAuthMe}
+                                        updateContactForm={updateContactForm}
+                                        dispatchErrorSubmitData={dispatchErrorSubmitData}/>
         </div>
     )
 });

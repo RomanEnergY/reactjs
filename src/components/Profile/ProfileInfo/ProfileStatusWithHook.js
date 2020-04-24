@@ -1,25 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import PreloaderMini from "../../common/preloader/PreloaderMini";
 
-const ProfileStatusWithHook = ({textStatus, fetchingStatus, dataUserId, authId, updateStatus}, props) => {
+const ProfileStatusWithHook = ({statusData, statusFetching, isAuthMe, updateStatus}, ...props) => {
     let [editMode, setEditMode] = useState(false);
-    let [statusText, setStatusText] = useState(textStatus);
+    let [statusText, setStatusText] = useState(statusData);
 
     useEffect(() => {
-        setStatusText(textStatus)
-    }, [textStatus]);
+        setStatusText(statusData)
+    }, [statusData]);
 
     const activateEditMode = () => {
-        if (`${dataUserId}` === `${authId}`) {
+        if (isAuthMe) {
             setEditMode(true);
-            setStatusText(textStatus);
+            setStatusText(statusData);
         }
     };
 
     const deActivateEditMode = () => {
         setEditMode(false);
 
-        if (statusText !== textStatus)
+        if (statusText !== statusData)
             updateStatus(statusText);
     };
 
@@ -29,7 +29,7 @@ const ProfileStatusWithHook = ({textStatus, fetchingStatus, dataUserId, authId, 
 
     return <div>
         <span onDoubleClick={activateEditMode}><b>status</b>:
-            {fetchingStatus
+            {statusFetching
                 ? <PreloaderMini/>
                 : !editMode
                     ? <span onDoubleClick={activateEditMode}>{` ${statusText || '---'}`}</span>

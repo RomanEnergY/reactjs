@@ -1,10 +1,10 @@
 import React from 'react';
 import style from '../Profile.module.css'
-import {Field, reduxForm} from "redux-form";
+import {Field} from "redux-form";
 import {KeyToInput} from "../../common/FormsComntrols/FormsControls";
 import {required} from "../../../utils/validators/validator";
 
-const ProfileContactForm = ({data, error, closeEdit, ...props}) => {
+const ProfileContactForm = ({error, closeEdit, ...props}) => {
     return (
         <div>
             <form onSubmit={props.handleSubmit}>
@@ -16,35 +16,36 @@ const ProfileContactForm = ({data, error, closeEdit, ...props}) => {
                 <Field name={'fullName'}
                        component={KeyToInput}
                        type="text"
-                       data={'Full name:'}
+                       label={'Full name:'}
                        validate={[required]}/>
 
                 <Field name={'lookingForAJob'}
                        component={KeyToInput}
                        type={'checkbox'}
-                       data={'Looking for a job:'}/>
+                       label={'Looking for a job:'}/>
 
                 <Field name={'lookingForAJobDescription'}
                        component={KeyToInput}
                        type="text"
-                       data={'Looking for a job description:'}
+                       label={'Looking for a job description:'}
                        validate={[required]}/>
 
                 <Field name={'aboutMe'}
                        component={KeyToInput}
                        type="text"
-                       data={'About me:'}
+                       label={'About me:'}
                        validate={[required]}/>
                 <div>
                     <b>Contacts</b>:
                     {Object
-                        .keys(data.contacts)
+                        // .keys(data.contacts)
+                        .keys(props.initialValues.contacts)
                         .map(key => {
                             return <div key={key} className={style.contact}>
                                 <Field name={'contacts.' + key}
                                        component={KeyToInput}
                                        type="text"
-                                       data={`${key}:`}/>
+                                       label={`${key}:`}/>
                             </div>
                         })}
                 </div>
@@ -53,6 +54,4 @@ const ProfileContactForm = ({data, error, closeEdit, ...props}) => {
     );
 };
 
-const ProfileContactReduxForm = reduxForm({form: 'edit-profile', enableReinitialize: true})(ProfileContactForm);
-
-export default ProfileContactReduxForm;
+export default ProfileContactForm;

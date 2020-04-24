@@ -52,12 +52,70 @@ export const api = {
         },
 
         updateStatusDataContacts(statusDataContacts) {
+            /**
+             * Метод проверяет наличие по шаблону значения данных и добавляет key: value в объект result
+             * Пример массива text:
+             * text = [
+             *      "The data of city (City)",
+             *      "The data of user.name (User->Name)",
+             *      "The data of user.surname (User->Surname)",
+             * }
+             *
+             * возращаемый объект
+             * returns = {
+             *     city: "The data of city ",
+             *     user: {
+             *          name: "The data of user.name ",
+             *          surname: "The data of user.surname "
+             *     }
+             * }
+             * @param text входной массив строк
+             * @returns {Object}
+             */
+            const getErrorResult = (text) => {
+                let result = {};
+                text.forEach(data => {
+                    let getMatchData = (pattern) => {
+                        return data.match(new RegExp(pattern, "i"));
+                    };
+
+                    let pref = '->';
+                    let matchUp = getMatchData(`(.+)(\\(.+)(${pref})(.+)`);
+                    let match = getMatchData(`(.+)(\\(.+)(.+)`);
+
+                    if (matchUp) {
+                        let nameKeyUpLevel = matchUp[2][1].toLowerCase() + matchUp[2].substring(2);
+                        let key = matchUp[4][0].toLowerCase() + matchUp[4].substring(1, matchUp[4].length - 1);
+                        let value = matchUp[1];
+
+                        result = {
+                            ...result,
+                            [nameKeyUpLevel]: {
+                                ...result[nameKeyUpLevel],
+                                [key]: value
+                            }
+                        };
+                    } else {
+                        if (match) {
+                            let key = match[2][1].toLowerCase() + match[2].substring(2);
+                            let value = match[1];
+
+                            result = {
+                                ...result,
+                                [key]: value
+                            };
+                        }
+                    }
+                });
+                return result;
+            };
+
             return instance.put(`profile`, statusDataContacts)
                 .then(response => {
                     if (response.data.resultCode === 0) {
                         return response;
                     } else {
-                        return Promise.reject(response.data.messages);
+                        return Promise.reject({...getErrorResult(response.data.messages)});
                     }
                 });
         }
