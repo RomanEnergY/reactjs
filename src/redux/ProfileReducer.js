@@ -7,6 +7,9 @@ const SET_STATUS_DATA = NAME_REDUCER + 'SET_STATUS_DATA';
 const SET_STATUS_FETCHING = NAME_REDUCER + 'SET_STATUS_FETCHING';
 const SET_PROFILE_DATA = NAME_REDUCER + 'SET_PROFILE_DATA';
 const SET_PROFILE_FETCHING = NAME_REDUCER + 'SET_PROFILE_FETCHING';
+const SET_PHOTOS_FETCHING = NAME_REDUCER + 'SET_PHOTOS_FETCHING';
+const SET_PHOTOS_DATA = NAME_REDUCER + 'SET_PHOTOS_DATA';
+const SET_ERROR_PHOTOS_DATA = NAME_REDUCER + 'SET_ERROR_PHOTOS_DATA';
 
 const addPost = (message) => ({type: ADD_POST, message});
 const setFetchingPost = (fetchingPost) => ({type: SET_FETCHING_POST, fetchingPost});
@@ -14,6 +17,9 @@ const setStatusData = (data) => ({type: SET_STATUS_DATA, data});
 const setStatusFetching = (fetching) => ({type: SET_STATUS_FETCHING, fetching});
 const setProfileData = (data) => ({type: SET_PROFILE_DATA, data});
 const setProfileFetching = (fetching) => ({type: SET_PROFILE_FETCHING, fetching});
+const setPhotosFetching = (fetching) => ({type: SET_PHOTOS_FETCHING, fetching});
+const setPhotosData = (photos) => ({type: SET_PHOTOS_DATA, photos});
+const setErrorPhotosData = (error) => ({type: SET_ERROR_PHOTOS_DATA, error});
 
 const initialState = {
     posts: [
@@ -42,12 +48,16 @@ const initialState = {
             lookingForAJob: false,
             lookingForAJobDescription: null,
             fullName: null,
-            userId: null,
-            photos: {
-                small: null,
-                large: null
-            }
+            userId: null
         },
+        fetching: false
+    },
+    photo: {
+        photos: {
+            small: null,
+            large: null
+        },
+        error: undefined,
         fetching: false
     }
 };
@@ -66,6 +76,7 @@ export const setProfileUserByUserId = (userId) => {
         api.profile.getProfileUserByUserId(userId)
             .then(response => {
                 dispatch(setProfileData(response.data));
+                dispatch(setErrorPhotosData(null));
                 dispatch(setProfileFetching(false));
             });
     }
@@ -124,6 +135,22 @@ export const setStatusDataContacts = (statusDataContacts) => {
     }
 };
 
+export const setProfilePhoto = (photo) => {
+    return (dispatch, getState) => {
+        dispatch(setPhotosFetching(true));
+        return api.profile.updateProfilePhoto(photo)
+            .then(responseThen => {
+                dispatch(setPhotosData(responseThen.data.data.photos));
+                dispatch(setErrorPhotosData(null));
+                dispatch(setPhotosFetching(false));
+            })
+            .catch(responseRej => {
+                dispatch(setErrorPhotosData(responseRej.data.messages[0]));
+                dispatch(setPhotosFetching(false));
+            })
+    }
+};
+
 export const profileReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_PROFILE_FETCHING:
@@ -136,11 +163,18 @@ export const profileReducer = (state = initialState, action) => {
             };
 
         case SET_PROFILE_DATA:
+            const photos = {...action.data.photos};
+            delete action.data.photos;
+
             return {
                 ...state,
                 profile: {
                     ...state.profile,
-                    data: action.data
+                    data: action.data,
+                },
+                photo: {
+                    ...state.photo,
+                    photos
                 }
             };
 
@@ -182,6 +216,33 @@ export const profileReducer = (state = initialState, action) => {
                 };
             }
             return state;
+
+        case SET_PHOTOS_FETCHING:
+            return {
+                ...state,
+                photo: {
+                    ...state.photo,
+                    fetching: action.fetching
+                }
+            };
+
+        case SET_PHOTOS_DATA:
+            return {
+                ...state,
+                photo: {
+                    ...state.photo,
+                    photos: action.photos
+                }
+            };
+
+        case SET_ERROR_PHOTOS_DATA:
+            return {
+                ...state,
+                photo: {
+                    ...state.photo,
+                    error: action.error
+                }
+            };
 
         default:
             return state;

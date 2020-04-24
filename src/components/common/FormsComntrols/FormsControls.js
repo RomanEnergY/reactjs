@@ -30,11 +30,10 @@ export const Input = ({input, meta, ...props}) => {
     )
 };
 
-export const KeyToInputComponent = ({input, meta, ...props}) => {
+export const KeyToInputComponent = ({input, data, meta, ...props}) => {
     const hasError = meta.error;
-    const changed = meta.initial !== input.value;
+    const changed = data !== input.value;
     let classNameInput = hasError ? styles.inputError : changed ? styles.changed : "";
-    debugger
 
     return (
         <div className={styles.formControl + " " + (hasError ? styles.error : "")}>

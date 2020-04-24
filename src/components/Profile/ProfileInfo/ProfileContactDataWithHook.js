@@ -28,7 +28,6 @@ const ProfileContactDataWithHook = ({profileData, profileFetching, isAuthMe, upd
     }, [isAuthMe, profileData, editMode]);
 
     let handleSubmit = (dataFormSubmit) => {
-        // debugger
         setDataForm(dataFormSubmit);
 
         updateContactForm(dataFormSubmit)
@@ -47,13 +46,15 @@ const ProfileContactDataWithHook = ({profileData, profileFetching, isAuthMe, upd
     return <div className={style.contactData}>
         {editMode
             ? <ProfileContactReduxForm initialValues={{...dataForm}}
+                                       data={profileData}
                                        onSubmit={handleSubmit}
                                        profileFetching={profileFetching}
                                        closeEdit={closeEdit}/>
 
             : <ProfileContactData activateEditMode={activateEditMode}
                                   buttonEditMode={buttonOnClick}
-                                  data={profileData}/>
+                                  data={profileData}
+                                  profileFetching={profileFetching}/>
         }
     </div>
 };

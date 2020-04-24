@@ -3,6 +3,7 @@ import ProfileInfo from "./ProfileInfo/ProfileInfo";
 import {connect} from "react-redux";
 import {
     getProfileDataAuth,
+    setProfilePhoto,
     setProfileUserByUserId,
     setStatusByUserId,
     setStatusDataContacts,
@@ -44,9 +45,11 @@ class ProfileContainer extends React.Component {
 
         return (<>
             <ProfileInfo
+                photo={this.props.photo}
                 status={this.props.status}
                 profile={this.props.profile}
                 isAuthMe={`${this.props.authId}` === `${this.props.profile.data.userId}`}
+                setProfilePhoto={this.props.setProfilePhoto}
                 updateStatus={this.props.updateStatus}
                 updateContactForm={this.props.setStatusDataContacts}
                 dispatchErrorSubmitData={this.props.dispatchErrorSubmitData}
@@ -61,7 +64,8 @@ const mapStateToProps = (state) => {
     return {
         authId: state.auth.data.id,
         status: state.profilePage.status,
-        profile: state.profilePage.profile
+        profile: state.profilePage.profile,
+        photo: state.profilePage.photo
     }
 };
 
@@ -78,7 +82,8 @@ export default compose(
         setStatusByUserId,
         updateStatus,
         setStatusDataContacts,
-        dispatchErrorSubmitData
+        dispatchErrorSubmitData,
+        setProfilePhoto
     }),
     withRouter,
 )(ProfileContainer);

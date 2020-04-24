@@ -118,6 +118,26 @@ export const api = {
                         return Promise.reject({...getErrorResult(response.data.messages)});
                     }
                 });
+        },
+
+        updateProfilePhoto(photo) {
+            const formData = new FormData();
+            formData.append("image", photo);
+            return instance.put(`profile/photo`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            })
+                .then(response => {
+                    if (response.data.resultCode === 0) {
+                        return response;
+                    } else {
+                        return Promise.reject(response);
+                    }
+                })
+                .catch(response => {
+                    return Promise.reject(response);
+                });
         }
     },
 
