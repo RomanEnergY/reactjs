@@ -6,3 +6,19 @@
     width: 16px;
 }
 
+/*.captcha img {*/
+/*    width: 200px;*/
+/*    height: 100px;*/
+/*}*/
+
+
+.captcha {
+    width: 200px;
+    height: 100px;
+    background-color: #ccc3ff;
+}
+
+.captcha img {
+    width: 200px;
+    height: 100px;
+}

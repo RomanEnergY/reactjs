@@ -149,10 +149,34 @@ export const api = {
                 })
         },
 
-        authorizeOnService(email, password, rememberMe = false) {
-            return instance.post(`auth/login`, {email, password, rememberMe})
+        authorizeOnService(email, password, rememberMe = false, captcha) {
+            return instance.post(`auth/login`, {email, password, rememberMe, captcha})
                 .then(response => {
-                    return response.data;
+                    if (response.data.resultCode === 0) {
+                        return Promise.resolve(true);
+
+                    } else if (response.data.resultCode === 10) {
+                        return api.auth.getCaptchaUrl()
+                            .then(captcha => {
+                                return Promise.reject({
+                                    response: response.data.messages[0],
+                                    captcha
+                                });
+                            })
+
+                    } else {
+                        return Promise.reject({
+                            response: response.data.messages[0]
+                        });
+                    }
+                })
+        },
+
+        // https://social-network.samuraijs.com/api/1.0/security/get-captcha-url
+        getCaptchaUrl() {
+            return instance.get(`security/get-captcha-url`)
+                .then(response => {
+                    return response.data.url;
                 })
         },
 

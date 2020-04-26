@@ -1,16 +1,19 @@
 import {api} from "../api/api";
-import {stopSubmit} from "redux-form";
 
 const NAME_REDUCER = 'authReducer/';
 const SET_RESULT_DATA = NAME_REDUCER + 'SET_RESULT_DATA';
 const SET_USER_DATA = NAME_REDUCER + 'SET_USER_DATA';
 const SET_FETCHING_AUTH_DATA = NAME_REDUCER + 'SET_FETCHING_AUTH_DATA';
 const SET_LOGIN = NAME_REDUCER + 'SET_LOGIN';
+const SET_ERROR_AUTH = NAME_REDUCER + 'SET_ERROR_AUTH';
+const SET_FETCHING_CAPTCHA = NAME_REDUCER + 'SET_FETCHING_CAPTCHA';
 
 const setAuthResultData = (resultCode, messages) => ({type: SET_RESULT_DATA, resultCode, messages});
 const setAuthUserData = (id, login, email, messages) => ({type: SET_USER_DATA, id, login, email, messages});
 const setFetching = (fetching) => ({type: SET_FETCHING_AUTH_DATA, fetching});
 const setLogin = (isLogin) => ({type: SET_LOGIN, isLogin});
+export const setErrorAuth = (error) => ({type: SET_ERROR_AUTH, error});
+export const setFetchingCaptcha = (fetching) => ({type: SET_FETCHING_CAPTCHA, fetching});
 
 const initialState = {
     data: {
@@ -22,6 +25,8 @@ const initialState = {
     },
     isAuth: false, // флаг состояния авторизации true означает, что пользователь авторизирован
     isFetching: false, // флаг текущего выполнения запроса на сервер
+    fetchingCaptcha: false,
+    errorAuth: undefined
 };
 
 
@@ -43,22 +48,42 @@ export const getAuthMeData = () => {
     };
 };
 
-export const authorizeOnService = (email, password, rememberMe) => {
-    return (dispatch) => {
+export const authorizeOnService = (email, password, rememberMe, captcha) => {
+    return (dispatch, getState) => {
         dispatch(setFetching(true));
-        api.auth.authorizeOnService(email, password, rememberMe)
+        return api.auth.authorizeOnService(email, password, rememberMe, captcha)
             .then(response => {
+                dispatch(getAuthMeData());
+                dispatch(setErrorAuth(null));
                 dispatch(setFetching(false));
-                if (response.resultCode === 0) {
-                    dispatch(getAuthMeData());
-                } else if (response.resultCode !== 0) {
-                    dispatch(stopSubmit('login', {
-                        _error: response.messages.length > 0 ? response.messages[0] : 'Some error'
-                    }));
-                }
+                return Promise.resolve(true);
+
+            })
+            .catch(response => {
+                dispatch(setErrorAuth({...response}));
+                dispatch(setFetching(false));
+                return Promise.reject({...response}); // передача ошибки на уровень выше
+
             });
     };
 };
+
+export const updateCaptcha = () => {
+    return (dispatch, getState) => {
+        let errorAuth = getState().auth.errorAuth;
+
+        dispatch(setFetchingCaptcha(true));
+        api.auth.getCaptchaUrl()
+            .then(captcha => {
+                dispatch(setErrorAuth({...errorAuth, captcha}));
+                dispatch(setFetchingCaptcha(false));
+            })
+            .catch(onRejected => {
+                dispatch(setFetchingCaptcha(false));
+            })
+    }
+};
+
 
 export const logout = () => {
     return (dispatch) => {
@@ -88,6 +113,18 @@ export const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isAuth: action.isLogin
+            };
+
+        case SET_ERROR_AUTH:
+            return {
+                ...state,
+                errorAuth: action.error
+            };
+
+        case SET_FETCHING_CAPTCHA:
+            return {
+                ...state,
+                fetchingCaptcha: action.fetching
             };
 
         case SET_USER_DATA:
