@@ -1,4 +1,4 @@
-import {api} from "../api/api";
+import {profileAPI} from "../api/api";
 
 const NAME_REDUCER = 'profileReducer/';
 const ADD_POST = NAME_REDUCER + 'ADD-POST';
@@ -73,7 +73,7 @@ export const addNewPost = (message) => {
 export const setProfileUserByUserId = (userId) => {
     return (dispatch) => {
         dispatch(setProfileFetching(true));
-        api.profile.getProfileUserByUserId(userId)
+        profileAPI.getProfileUserByUserId(userId)
             .then(response => {
                 dispatch(setProfileData(response.data));
                 dispatch(setErrorPhotosData(null));
@@ -101,7 +101,7 @@ export const getProfileDataAuth = () => {
 export const setStatusByUserId = (userId) => {
     return (dispatch) => {
         dispatch(setStatusFetching(true));
-        api.profile.getTextStatusByUserId(userId)
+        profileAPI.getTextStatusByUserId(userId)
             .then(response => {
                 dispatch(setStatusData(response.data));
                 dispatch(setStatusFetching(false));
@@ -112,7 +112,7 @@ export const setStatusByUserId = (userId) => {
 export const updateStatus = (newStatus) => {
     return (dispatch) => {
         dispatch(setStatusFetching(true));
-        api.profile.updateStatus(newStatus)
+        profileAPI.updateStatus(newStatus)
             .then(response => {
                 dispatch(setStatusData(newStatus));
                 dispatch(setStatusFetching(false));
@@ -124,7 +124,7 @@ export const setStatusDataContacts = (statusDataContacts) => {
     return (dispatch, getState) => {
         // dispatch(setStatusProfileData(statusDataContacts));
         dispatch(setProfileFetching(true));
-        return api.profile.updateStatusDataContacts(statusDataContacts)
+        return profileAPI.updateStatusDataContacts(statusDataContacts)
             .then(responseThen => {
                 dispatch(setProfileUserByUserId(getState().auth.data.id));
             })
@@ -138,7 +138,7 @@ export const setStatusDataContacts = (statusDataContacts) => {
 export const setProfilePhoto = (photo) => {
     return (dispatch, getState) => {
         dispatch(setPhotosFetching(true));
-        return api.profile.updateProfilePhoto(photo)
+        return profileAPI.updateProfilePhoto(photo)
             .then(responseThen => {
                 dispatch(setPhotosData(responseThen.data.data.photos));
                 dispatch(setErrorPhotosData(null));

@@ -1,4 +1,4 @@
-import {api} from "../api/api";
+import {followAPI, userAPI} from "../api/api";
 
 const NAME_REDUCER = 'usersReducer/';
 const SET_USERS = NAME_REDUCER + 'SET_USERS';
@@ -34,14 +34,11 @@ const initialState = {
 export const getUsers = (pageNumber, pageSize = pageSizeDefault) => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        const setUserData = api.users.getUsers(pageNumber, pageSize)
+        userAPI.getUsers(pageNumber, pageSize)
             .then(response => {
                 dispatch(setUsers(response.items, response.totalCount));
+                dispatch(setFetching(false));
             });
-
-        setUserData.then(() => {
-            dispatch(setFetching(false));
-        })
     };
 };
 
@@ -65,13 +62,13 @@ export const followUserMain = (userId, method, followed) => {
 
 export const followUser = (userId) => {
     return (dispatch) => {
-        dispatch(followUserMain(userId, api.follow.follow, true));
+        dispatch(followUserMain(userId, followAPI.follow, true));
     };
 };
 
 export const unFollowUser = (userId) => {
     return (dispatch) => {
-        dispatch(followUserMain(userId, api.follow.unFollow, false));
+        dispatch(followUserMain(userId, followAPI.unFollow, false));
     };
 };
 

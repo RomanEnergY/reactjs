@@ -17,6 +17,7 @@ const LoginWithHook = ({fetching, isAuth, idAuth, errorAuth, fetchingCaptcha, au
     const handleSubmit = (formData) => {
         authorizeOnService(formData.email, formData.password, formData.rememberMe, formData.captcha)
             .catch(error => {
+                debugger
                 dispatchErrorSubmitData(stopSubmit(nameReduxForm.form, {error: "Error form"}));
             })
     };

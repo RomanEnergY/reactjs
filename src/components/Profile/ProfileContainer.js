@@ -51,7 +51,7 @@ class ProfileContainer extends React.Component {
                 isAuthMe={`${this.props.authId}` === `${this.props.profile.data.userId}`}
                 setProfilePhoto={this.props.setProfilePhoto}
                 updateStatus={this.props.updateStatus}
-                updateContactForm={this.props.setStatusDataContacts}
+                updateConta0ctForm={this.props.setStatusDataContacts}
                 dispatchErrorSubmitData={this.props.dispatchErrorSubmitData}
             />
 

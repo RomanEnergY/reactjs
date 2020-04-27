@@ -1,4 +1,4 @@
-import {api} from "../api/api";
+import {authAPI} from "../api/api";
 
 const NAME_REDUCER = 'authReducer/';
 const SET_RESULT_DATA = NAME_REDUCER + 'SET_RESULT_DATA';
@@ -33,7 +33,7 @@ const initialState = {
 export const getAuthMeData = () => {
     return (dispatch) => {
         dispatch(setFetching(true));
-        return api.auth.isAuthMe() // возвращаем Promise
+        return authAPI.isAuthMe() // возвращаем Promise
             .then(response => {
                 dispatch(setAuthResultData(response.resultCode, response.messages));
 
@@ -51,7 +51,7 @@ export const getAuthMeData = () => {
 export const authorizeOnService = (email, password, rememberMe, captcha) => {
     return (dispatch, getState) => {
         dispatch(setFetching(true));
-        return api.auth.authorizeOnService(email, password, rememberMe, captcha)
+        return authAPI.authorizeOnService(email, password, rememberMe, captcha)
             .then(response => {
                 dispatch(getAuthMeData());
                 dispatch(setErrorAuth(null));
@@ -73,7 +73,7 @@ export const updateCaptcha = () => {
         let errorAuth = getState().auth.errorAuth;
 
         dispatch(setFetchingCaptcha(true));
-        api.auth.getCaptchaUrl()
+        authAPI.getCaptchaUrl()
             .then(captcha => {
                 dispatch(setErrorAuth({...errorAuth, captcha}));
                 dispatch(setFetchingCaptcha(false));
@@ -87,7 +87,7 @@ export const updateCaptcha = () => {
 
 export const logout = () => {
     return (dispatch) => {
-        api.auth.logout()
+        authAPI.logout()
             .then(response => {
                 if (response.resultCode === 0) {
                     dispatch(setAuthUserData(undefined, undefined, undefined));
